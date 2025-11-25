@@ -5,4 +5,14 @@ const router = createRouter({
   routes: [],
 })
 
+const Login = () => import('../views/LoginView.vue')
+
+
+const routes = [
+    {
+        path: '/login',
+        name: 'Login',
+        component: Login
+    }
+  ]
 export default router
