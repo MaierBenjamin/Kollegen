@@ -18,6 +18,14 @@
   "homepage": "https://github.com/julianamschwand/Kollegen#readme",
   "description": "",
   "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "express-mysql-session": "^3.0.3",
+    "express-session": "^1.18.2",
+    "formidable": "^3.5.4",
+    "jest": "^30.2.0",
+    "mysql2": "^3.15.3",
     "nodemon": "^3.1.10"
   }
 }
