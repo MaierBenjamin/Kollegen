@@ -55,21 +55,6 @@ import { useRouter } from "vue-router";
 
 const email = ref("");
 const password = ref("");
-const router = useRouter();
-
-const handleLogin = async () => {
-  // HIER machst du deinen API-Call / Login-Logik
-  // Beispiel:
-  // const res = await fetch("/api/login", { ... });
-  // if (res.ok) router.push("/dashboard");
-  console.log("Login with:", email.value, password.value);
-};
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-
-const email = ref("");
-const password = ref("");
-const router = useRouter();
 
 const handleLogin = async () => {
   // HIER machst du deinen API-Call / Login-Logik
