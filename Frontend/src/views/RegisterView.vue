@@ -6,10 +6,22 @@
     </div>
 
     <!-- Karte -->
-    <div class="login-card">
-      <h1 class="login-title">Login</h1>
+    <div class="register-card">
+      <h1 class="register-title">Register</h1>
 
-      <form class="login-form" @submit.prevent="handleLogin">
+      <form class="register-form" @submit.prevent="handleRegister">
+        <!-- Username -->
+         <div class="form-group">
+            <label for="username">Username</label>  
+            <input
+              id="username"
+              type="text"
+              v-model="username"
+              placeholder="MaxMustermann"
+              required
+            />
+         </div>        
+        
         <!-- E-Mail -->
         <div class="form-group">
           <label for="email">E-Mail</label>
@@ -29,21 +41,21 @@
             id="password"
             type="password"
             v-model="password"
-            placeholder="example@.com"
+            placeholder="1234abcd!"
             required
           />
         </div>
 
         <!-- Button -->
-        <button type="submit" class="login-button">
-          Login
+        <button type="submit" class="register-button">
+          Register
         </button>
       </form>
 
       <!-- Text unten -->
       <p class="register-text">
         Haben Sie bereits ein Konto?
-        <RouterLink to="/register">Jetzt kostenlos registrieren.</RouterLink>
+        <RouterLink to="/login">Jetzt einloggen.</RouterLink>
       </p>
     </div>
   </div>
@@ -53,16 +65,15 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 
+
+const username = ref("");
 const email = ref("");
 const password = ref("");
 const router = useRouter();
 
-const handleLogin = async () => {
-  // HIER machst du deinen API-Call / Login-Logik
-  // Beispiel:
-  // const res = await fetch("/api/login", { ... });
-  // if (res.ok) router.push("/dashboard");
-  console.log("Login with:", email.value, password.value);
+const handleRegister = async () => {
+
+  console.log("Register with:", username.value, email.value, password.value);
 };
 </script>
 
@@ -72,10 +83,11 @@ const handleLogin = async () => {
 .icon-wrapper {
   font-size: 72px;
   margin-bottom: 20px;
+  
 }
 
 /* Karte */
-.login-card {
+.register-card {
   background: #e7e7ff;
   border-radius: 20px;
   width: min(800px, 90%);
@@ -84,7 +96,7 @@ const handleLogin = async () => {
 }
 
 /* Titel */
-.login-title {
+.register-title {
   text-align: center;
   font-size: 48px;
   margin-bottom: 50px;
@@ -92,7 +104,7 @@ const handleLogin = async () => {
 }
 
 /* Form */
-.login-form {
+.register-form {
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -119,7 +131,7 @@ const handleLogin = async () => {
 
 
 /* Button */
-.login-button {
+.register-button {
   margin-top: 32px;
   width: 100%;
   padding: 16px 0;

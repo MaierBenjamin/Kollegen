@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <h1>Salam</h1>
+  <h1></h1>
   <RouterView />
 </template>
 
