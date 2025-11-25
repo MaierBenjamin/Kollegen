@@ -25,9 +25,13 @@
 - Create channels
 - Delete channels
 - Edit channel names
-- Upload files to group
+- Send message in channel
+- Upload files to channel
+- Download files from channel
+- Show all files from channel
 
 ## Chats
 - Create chat
 - Send chat message
 - Get chat messages
+- Get all chats

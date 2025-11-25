@@ -13,6 +13,7 @@ CREATE TABLE Organizations(
 
 CREATE TABLE OrganizationUsers(
   organizationUserId INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  userRole enum('user','admin','owner'),
   fk_UserId INT UNSIGNED,
   fk_OrganizationId INT UNSIGNED,
   UNIQUE (fk_UserId, fk_OrganizationId),
