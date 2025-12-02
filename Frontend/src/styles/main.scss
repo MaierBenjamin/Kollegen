@@ -13,6 +13,7 @@ body, html, #app {
     padding: 0;
     background-color: var(--background);
     font: inherit;
+    overflow: hidden;
 
     .account-page {
         min-height: 100vh;

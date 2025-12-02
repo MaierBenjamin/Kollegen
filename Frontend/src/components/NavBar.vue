@@ -29,12 +29,14 @@
     align-items: center;          
     justify-content: space-between;
     width: 100%;
+    height: 70px;
     padding: 0 20px;              
     background-color: #6264a7;
     box-sizing: border-box;
     margin-top: 0.5%;
     position: relative;
     z-index: 10;
+    
 }
  
 .searchicon img {
