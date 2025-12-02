@@ -2,12 +2,14 @@
   import { RouterView } from 'vue-router';
 import router from './router';
 import NavBar from './components/NavBar.vue';
+import HomeView from './views/HomeView.vue';
 
 </script>
 
 <template>
+  <NavBar />
   <RouterView />
-  <NavBar/>
+  
 </template>
 
 <style scoped></style>
