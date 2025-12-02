@@ -1,5 +1,12 @@
 <script>
- 
+import { ref } from 'vue';
+
+const searchtext = ref(''); 
+
+function onPFPClick() {
+    router.push('/account');
+}
+
 </script>
  
 <template>
@@ -10,39 +17,32 @@
         <div class="form-group">
             <input
             id="search"
-            v-model="search"
+            v-model="searchtext"
             placeholder="Search"
           />
         </div>
-        <div class="profilpicture"><img src="@/assets/sigma.webp" alt=""></div>
+        <router-link to="/account" class="profilpicture">
+            <img src="@/assets/sigma.webp" alt="">
+        </router-link>
     </div>
-    <div class="side-bar">
+</template> 
 
-    </div>
-</template>
- 
- 
-<style>
+
+<style lang="scss" scoped>
 .top-bar {
     display: flex;
     flex-direction: row;
     align-items: center;          
     justify-content: space-between;
     width: 100%;
-    height: 70px;
-    padding: 0 20px;              
-    background-color: #6264a7;
+    padding: 0 20px;       
+    height: 70px;       
+    background-color: var(--background);
     box-sizing: border-box;
-    margin-top: 0.5%;
-    position: relative;
-    z-index: 10;
-    
+    top: 0;
+    border-bottom: 1px solid white;
 }
- 
-.searchicon img {
-    height: 30px;
-}
- 
+
 .logo img {
     width: 50px;
     height: 50px;
@@ -52,7 +52,7 @@
 .form-group {
     flex: 1;                      
     display: flex;
-    justify-content: center;      
+    justify-content: center; 
 
     label {
         display: block;
@@ -80,15 +80,10 @@
     object-fit: cover;
 }
 
-.side-bar {
-    width: 100px;
-    height: 100vh;
-    background-color: #6264a7;
-    position: fixed;
-    top: 0;
-    left: 0;
-    padding-top: 80px; 
-    z-index: 1;
+.profilpicture  {
+    background: none;
+    border: none;
+    cursor: pointer;
 }
- 
+
 </style>

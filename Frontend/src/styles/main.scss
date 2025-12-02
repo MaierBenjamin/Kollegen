@@ -4,7 +4,6 @@
 
 :root {
     --background: #6264a7;
-
 }
 
 
@@ -13,7 +12,8 @@ body, html, #app {
     padding: 0;
     background-color: var(--background);
     font: inherit;
-    overflow: hidden;
+    height: 100%;
+    width: 100%;
 
     .account-page {
         min-height: 100vh;

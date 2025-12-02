@@ -1,9 +1,11 @@
 <script setup>
-
+ 
 </script>
 
 
 
+ 
+ 
 <template>
   <div class="home-view">
     <img class="settings-icon" src="@/assets/settings.svg" alt="Settings" />        
@@ -14,8 +16,10 @@
     </div>
   </div>
 </template>
-
-<style scoped>
+ 
+ 
+ 
+<style lang="scss" scoped>
 .home-view {
   position: relative;
   display: flex;
