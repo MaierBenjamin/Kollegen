@@ -1,4 +1,11 @@
 <script>
+import { ref } from 'vue';
+
+const searchtext = ref(''); 
+
+function onPFPClick() {
+    router.push('/account');
+}
 
 </script>
 
@@ -10,11 +17,13 @@
         <div class="form-group">
             <input
             id="search"
-            v-model="search"
+            v-model="searchtext"
             placeholder="Search"
           />
         </div>
-        <div class="profilpicture"><img src="@/assets/sigma.webp" alt=""></div>
+        <router-link to="/account" class="profilpicture">
+            <img src="@/assets/sigma.webp" alt="">
+        </router-link>
     </div>
 </template>
 
@@ -29,9 +38,12 @@
     padding: 0 20px;              
     background-color: #6264a7;
     box-sizing: border-box;
-    margin-top: 0.5%;
+    top: 0;
 }
 
+body{
+    padding-top: 0.5%;
+}
 
 .logo img {
     width: 50px;
@@ -66,6 +78,12 @@
     height: 50px;
     border-radius: 50%;
     object-fit: cover;
+}
+
+.profilpicture  {
+    background: none;
+    border: none;
+    cursor: pointer;
 }
 
 </style>
