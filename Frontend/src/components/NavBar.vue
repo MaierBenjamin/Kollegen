@@ -13,7 +13,6 @@
             v-model="search"
             placeholder="Search"
           />
-          <button><img src="@/assets/search.svg" alt=""></button>
         </div>
         <div class="profilpicture"><img src="@/assets/sigma.webp" alt=""></div>
     </div>
@@ -30,21 +29,20 @@
     padding: 0 20px;              
     background-color: #6264a7;
     box-sizing: border-box;
+    margin-top: 0.5%;
 }
 
+
 .logo img {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     object-fit: cover;
 }
 
-.form-group {
+.form-group {   
     flex: 1;                       
     display: flex;
-    justify-content: center;      
-}
-
-.form-group {
+    justify-content: center; 
     label {
         display: block;
         margin-bottom: 8px;
@@ -60,11 +58,12 @@
         font-size: 16px;
         box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
     }
+
 }
 
 .profilpicture img {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     object-fit: cover;
 }
