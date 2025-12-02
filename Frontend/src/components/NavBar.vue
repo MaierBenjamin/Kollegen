@@ -8,7 +8,7 @@ function onPFPClick() {
 }
 
 </script>
-
+ 
 <template>
     <div class="top-bar">
         <div class="logo">
@@ -32,8 +32,8 @@ function onPFPClick() {
 .top-bar {
     display: flex;
     flex-direction: row;
-    align-items: center;           
-    justify-content: space-between; 
+    align-items: center;          
+    justify-content: space-between;
     width: 100%;
     padding: 0 20px;       
     height: 70px;       
@@ -48,9 +48,9 @@ function onPFPClick() {
     height: 50px;
     object-fit: cover;
 }
-
-.form-group {   
-    flex: 1;                       
+ 
+.form-group {
+    flex: 1;                      
     display: flex;
     justify-content: center; 
 
@@ -59,7 +59,7 @@ function onPFPClick() {
         margin-bottom: 8px;
         font-size: 16px;
     }
-
+ 
     input {
         width: 50%;
         padding: 14px 18px;
@@ -70,8 +70,9 @@ function onPFPClick() {
         box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
     }
 
-}
 
+}
+ 
 .profilpicture img {
     width: 50px;
     height: 50px;
