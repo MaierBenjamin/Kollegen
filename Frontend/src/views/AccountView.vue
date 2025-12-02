@@ -5,8 +5,8 @@ import NavBar from '@/components/NavBar.vue';
 
 
 <template>
-<h1>bus</h1>
+
 </template>
 
-<style>
+<style lang="scss" scoped>
 </style>

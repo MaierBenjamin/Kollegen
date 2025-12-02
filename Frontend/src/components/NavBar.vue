@@ -25,24 +25,22 @@ function onPFPClick() {
             <img src="@/assets/sigma.webp" alt="">
         </router-link>
     </div>
-</template>
+</template> 
 
 
-<style>
+<style lang="scss" scoped>
 .top-bar {
     display: flex;
     flex-direction: row;
     align-items: center;           
     justify-content: space-between; 
     width: 100%;
-    padding: 0 20px;              
-    background-color: #6264a7;
+    padding: 0 20px;       
+    height: 70px;       
+    background-color: var(--background);
     box-sizing: border-box;
     top: 0;
-}
-
-body{
-    padding-top: 0.5%;
+    border-bottom: 1px solid white;
 }
 
 .logo img {
@@ -55,6 +53,7 @@ body{
     flex: 1;                       
     display: flex;
     justify-content: center; 
+
     label {
         display: block;
         margin-bottom: 8px;
