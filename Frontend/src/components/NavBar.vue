@@ -42,8 +42,8 @@
 }
  
 .logo img {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     object-fit: cover;
 }
  
@@ -68,11 +68,12 @@
         box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
     }
 
+
 }
  
 .profilpicture img {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     object-fit: cover;
 }
