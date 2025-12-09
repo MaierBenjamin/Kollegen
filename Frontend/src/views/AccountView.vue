@@ -5,13 +5,26 @@ const username = ref("Pascal123")
 const email = ref("pascal_buehler@sluz.ch")
 const password = ref("Pascal123")
 
+const organisations = ["Organisation 1", "Organisation 2", "Organisation 3"]
+const selected = ref(organisations[0])
+const isOpen = ref(false)
+
 function saveChanges() {
   console.log("Saved values:")
   console.log("Username:", username.value)
   console.log("Email:", email.value)
   console.log("Password:", password.value)
+  console.log("Organisation:", selected.value)
+}
 
+function toggleDropdown() {
+  isOpen.value = !isOpen.value
+}
 
+function selectOption(org) {
+  selected.value = org
+  isOpen.value = false
+  console.log("Selected:", org)
 }
 </script>
 
@@ -30,9 +43,20 @@ function saveChanges() {
         <input id="email" v-model="email" placeholder="E-Mail" />
       </div>
 
-      <h3>Passwort</h3>
-      <div class="input-field">
-        <input id="password" type="password" v-model="password" placeholder="Passwort" />
+      <h3>Aktuelle Organisation</h3>
+      <div class="dropdown">
+        <button class="dropdown-btn" @click="toggleDropdown">
+          {{ selected }} 
+        </button>
+        <ul v-show="isOpen" class="dropdown-list">
+          <div 
+            v-for="(org, index) in organisations" 
+            :key="index" 
+            @click="selectOption(org)"
+          >
+            {{ org }}
+        </div>
+        </ul>
       </div>
 
       <button class="button" @click="saveChanges">Änderungen speichern</button>
@@ -50,7 +74,7 @@ function saveChanges() {
   width: 400px; 
   margin: 0 auto;
   padding: 20px;
-  background: #fff;
+  background: white;
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     margin: 0 auto;
