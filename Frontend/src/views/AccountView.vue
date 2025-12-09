@@ -1,55 +1,43 @@
 <script setup>
-import NavBar from '@/components/NavBar.vue';
-
-const username = "Pascal123";
-const email = "pascal_buehler@sluz.ch";
-const password = "Pascal123";
-
-
 import { ref } from 'vue'
 
-const fileInput = ref(null)
+const username = ref("Pascal123")
+const email = ref("pascal_buehler@sluz.ch")
+const password = ref("Pascal123")
 
-function openFileDialog() {
-  fileInput.value.click()
+function saveChanges() {
+  console.log("Saved values:")
+  console.log("Username:", username.value)
+  console.log("Email:", email.value)
+  console.log("Password:", password.value)
+
+
 }
 </script>
 
-
 <template>
-<div class="page-wrapper">
-  <div class="account-content">
-    <h1 class="h1">Konto Übersicht</h1>
-    <h2>Benutzername</h2>
-    <div class="input-field">
-                <input
-                id="username"
-                v-model="username"
-                placeholder="Benutzername"
-            />
-    </div>
-    <h2>E-Mail</h2>
-    <div class="input-field">
-                <input
-                id="email"
-                v-model="email"
-                placeholder="E-Mail"
-            />
-    </div>
-    <h2>Passwort</h2>
-    <div class="input-field">
-                <input
-                id="password"
-                v-model="password"
-                placeholder="Passwort"
-            />
-    </div>
+  <div class="page-wrapper">
+    <div class="account-content">
+      <h2 class="h1">Konto Übersicht</h2> 
 
-    
+      <h3>Benutzername</h3>
+      <div class="input-field">
+        <input id="username" v-model="username" placeholder="Benutzername" />
+      </div>
 
-    <button class="button">Änderungen speichern</button>
-</div>
-</div>
+      <h3>E-Mail</h3>
+      <div class="input-field">
+        <input id="email" v-model="email" placeholder="E-Mail" />
+      </div>
+
+      <h3>Passwort</h3>
+      <div class="input-field">
+        <input id="password" type="password" v-model="password" placeholder="Passwort" />
+      </div>
+
+      <button class="button" @click="saveChanges">Änderungen speichern</button>
+    </div>
+  </div>
 </template>
 
 <style lang="scss" scoped>
@@ -133,8 +121,14 @@ function openFileDialog() {
     background-color: var(--background);
     border: none;
     border-radius: 12px;
-    padding: 8px 16px;    
+    padding: 8px 16px;
     cursor: pointer;
     height: 40px;
+    transition: all 0.3s ease; 
 }
+
+.button:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25); 
+}
+
 </style>
