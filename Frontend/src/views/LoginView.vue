@@ -12,7 +12,7 @@
       <form class="login-form" @submit.prevent="handleLogin">
         <!-- E-Mail -->
         <div class="form-group">
-          <label for="email">E-Mail</label>
+          <label for="email">E-Mail oder Benutzername</label>
           <input
             id="email"
             type="email"

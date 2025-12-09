@@ -4,11 +4,12 @@
 <template>
     <div class="left-bar">
         <router-link to="/" class="logo">
-            <img src="@/assets/chat.svg" alt="">
-        </router-link>
-        <router-link to="/" class="logo">
             <img src="@/assets/group.svg" alt="">
         </router-link>
+        <router-link to="/" class="logo">
+            <img src="@/assets/chat.svg" alt="">
+        </router-link>
+        
     </div>
 </template>
 <style lang="scss" scoped>
