@@ -16,7 +16,7 @@ Kollegen soll eine alternative zu Programmen wie Teams oder Slack.
 - Dateisharing (in Mannschaften)
 
 ## Technologien
-| Bereich               | Technologie / Tool      |
+| Bereich               | Technologie / Tool       |
 |-----------------------|--------------------------|
 | Frontend              | Vue                      |
 | Backend               | Node                     |
@@ -25,6 +25,8 @@ Kollegen soll eine alternative zu Programmen wie Teams oder Slack.
 | Projektmanagement     | Kanban (MIRO)            |
 | DevOps/Pipelines      | GitHub Actions           |
 | Server                | Selfhosting (Ubuntu)     |
+| Server                | Webhosting engine x      |
+| 
 
 ## Aufgabenverteilung
 - Aufgabenverteilung ist flexibel, jedoch hat jeder einen Schwerpunkt.
