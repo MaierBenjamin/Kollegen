@@ -46,15 +46,14 @@ function openFileDialog() {
                 placeholder="Passwort"
             />
     </div>
-    <div class="logo">
-                <router-link to="/" class="profilpicture">
-                <img src="@/assets/sigma.webp" alt="">
-                </router-link>
-                
-            </div>
+    <div class="profilpicture-content">
+        <div class="profilpicture">
+            <img src="@/assets/sigma.webp" alt="">
+        </div>
 
-
-    <button @click="openFileDialog">Profilbild ändern</button>
+        <button @click="openFileDialog">Profilbild ändern</button>
+    </div>
+    
     <input type="file" ref="fileInput" style="display: none;" />
 
     <button>Änderungen speichern</button>
@@ -63,21 +62,19 @@ function openFileDialog() {
 </template>
 
 <style lang="scss" scoped>
-// .account-content{
-//     display: flex;
-//     flex-direction: column;
-//     font-family: Arial, Helvetica, sans-serif;
-// }
 
 .account-content {
-  width: 400px; /* oder was du nice findest */
+
+  display: flex;
+    flex-direction: column;
+    font-family: Arial, Helvetica, sans-serif;
+  width: 400px; 
   margin: 0 auto;
   padding: 20px;
   background: #fff;
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     margin: 0 auto;
-
 }
 
 .page-wrapper {
@@ -85,13 +82,12 @@ function openFileDialog() {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #f5f5f5; /* leichter Grauton für den vibe */
   margin: 0 auto;
 }
 
 .h1{
     font-family:Arial, Helvetica, sans-serif;
-    
+    text-align: center;
 }
 
 .profilpicture img {
@@ -105,5 +101,12 @@ function openFileDialog() {
     background: none;
     border: none;
     cursor: pointer;
+}
+
+.profilpicture-content
+{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
 </style>
