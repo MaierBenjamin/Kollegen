@@ -48,7 +48,7 @@
 
   display: flex;
   align-items: center;
-  justify-content: space-between; /* Text links, Punkte rechts */
+  justify-content: space-between; 
 }
 
 .ellipsis-icon {

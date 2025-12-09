@@ -12,7 +12,10 @@ function onPFPClick() {
 <template>
     <div class="top-bar">
         <div class="logo">
-            <img src="@/assets/handshake.svg" alt="logo">
+            <router-link to="/" class="logo">
+            <img src="@/assets/handshake.svg" alt="">
+            </router-link>
+            
         </div>
         <div class="form-group">
             <input

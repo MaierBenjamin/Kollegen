@@ -18,11 +18,10 @@ import SideBar from './components/SideBar.vue';
 <style lang="scss" scoped>
 .main-content {
   display: flex;
-  max-height: calc(100% - 70px);
+  // max-height: calc(100% - 70px);
+  height: 100%  ;
   background-color: #e2e3ff;
-  .router-wrapper {
-    max-height: 100%;
-    overflow: auto;
-  }
+  
+
 }
 </style>
