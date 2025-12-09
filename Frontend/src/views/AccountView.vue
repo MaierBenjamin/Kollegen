@@ -19,50 +19,79 @@ function openFileDialog() {
 
 
 <template>
-<h1 class="h1">Konto Übersicht</h1>
-<h2>Vor- und Nachname</h2>
-<div class="form-group">
-            <input
-            id="search"
-            v-model="names"
-            placeholder="Search"
-          />
+<div class="page-wrapper">
+  <div class="account-content">
+    <h1 class="h1">Konto Übersicht</h1>
+    <h2>Vor- und Nachname</h2>
+    <div class="form-group">
+                <input
+                id="search"
+                v-model="names"
+                placeholder="Search"
+            />
+    </div>
+    <h2>E-Mail</h2>
+    <div class="form-group">
+                <input
+                id="search"
+                v-model="email"
+                placeholder="Search"
+            />
+    </div>
+    <h2>Passwort</h2>
+    <div class="form-group">
+                <input
+                id="search"
+                v-model="password"
+                placeholder="Passwort"
+            />
+    </div>
+    <div class="logo">
+                <router-link to="/" class="profilpicture">
+                <img src="@/assets/sigma.webp" alt="">
+                </router-link>
+                
+            </div>
+
+
+    <button @click="openFileDialog">Profilbild ändern</button>
+    <input type="file" ref="fileInput" style="display: none;" />
+
+    <button>Änderungen speichern</button>
 </div>
-<h2>E-Mail</h2>
-<div class="form-group">
-            <input
-            id="search"
-            v-model="email"
-            placeholder="Search"
-          />
 </div>
-<h2>Passwort</h2>
-<div class="form-group">
-            <input
-            id="search"
-            v-model="password"
-            placeholder="Passwort"
-          />
-</div>
-<div class="logo">
-            <router-link to="/" class="profilpicture">
-            <img src="@/assets/sigma.webp" alt="">
-            </router-link>
-            
-        </div>
-
-
-<button @click="openFileDialog">Profilbild ändern</button>
-<input type="file" ref="fileInput" style="display: none;" />
-
-<button>Änderungen speichern</button>
-
 </template>
 
 <style lang="scss" scoped>
+// .account-content{
+//     display: flex;
+//     flex-direction: column;
+//     font-family: Arial, Helvetica, sans-serif;
+// }
+
+.account-content {
+  width: 400px; /* oder was du nice findest */
+  margin: 0 auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    margin: 0 auto;
+
+}
+
+.page-wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f5f5f5; /* leichter Grauton für den vibe */
+  margin: 0 auto;
+}
+
 .h1{
     font-family:Arial, Helvetica, sans-serif;
-    padding-left: 100%;
+    
 }
 
 .profilpicture img {
