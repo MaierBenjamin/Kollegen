@@ -1,9 +1,7 @@
 <script setup>
 import NavBar from '@/components/NavBar.vue';
-const firstName = "Pascal";
-const lastName = "Bühler";
 
-const names = firstName + " " + lastName;
+const username = "Pascal123";
 const email = "pascal_buehler@sluz.ch";
 const password = "Pascal123";
 
@@ -22,39 +20,32 @@ function openFileDialog() {
 <div class="page-wrapper">
   <div class="account-content">
     <h1 class="h1">Konto Übersicht</h1>
-    <h2>Vor- und Nachname</h2>
+    <h2>Benutzername</h2>
     <div class="input-field">
                 <input
-                id="search"
-                v-model="names"
-                placeholder="Search"
+                id="username"
+                v-model="username"
+                placeholder="Benutzername"
             />
     </div>
     <h2>E-Mail</h2>
     <div class="input-field">
                 <input
-                id="search"
+                id="email"
                 v-model="email"
-                placeholder="Search"
+                placeholder="E-Mail"
             />
     </div>
     <h2>Passwort</h2>
     <div class="input-field">
                 <input
-                id="search"
+                id="password"
                 v-model="password"
                 placeholder="Passwort"
             />
     </div>
-    <div class="profilpicture-content">
-        <div class="profilpicture">
-            <img src="@/assets/sigma.webp" alt="">
-        </div>
 
-        <button class="button" @click="openFileDialog">Profilbild ändern</button>
-    </div>
     
-    <input type="file" ref="fileInput" style="display: none;" />
 
     <button class="button">Änderungen speichern</button>
 </div>
@@ -109,6 +100,7 @@ function openFileDialog() {
     flex-direction: row;
     justify-content: center;
     padding-bottom: 30px;
+    align-items: center;
 }
 
 .input-field{
@@ -136,11 +128,13 @@ function openFileDialog() {
 }
 
 .button {
+    margin-top: 20px;
     color: white;
     background-color: var(--background);
     border: none;
     border-radius: 12px;
     padding: 8px 16px;    
     cursor: pointer;
+    height: 40px;
 }
 </style>
