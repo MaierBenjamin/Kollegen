@@ -50,7 +50,7 @@ function selectOption(org) {
         </button>
         <ul v-show="isOpen" class="dropdown-list">
           <div 
-            v-for="(org, index) in organisations" 
+            v-for="org in organisations" 
             :key="index" 
             @click="selectOption(org)"
           >
@@ -58,7 +58,6 @@ function selectOption(org) {
         </div>
         </ul>
       </div>
-
       <button class="button" @click="saveChanges">Änderungen speichern</button>
     </div>
   </div>
@@ -153,6 +152,15 @@ function selectOption(org) {
 
 .button:hover {
     filter: brightness(0.9);
+}
+
+.dropdown-btn{
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+.dropdown-list{
+    cursor: pointer;
 }
 
 </style>
