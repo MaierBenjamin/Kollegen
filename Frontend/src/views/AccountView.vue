@@ -23,7 +23,7 @@ function openFileDialog() {
   <div class="account-content">
     <h1 class="h1">Konto Übersicht</h1>
     <h2>Vor- und Nachname</h2>
-    <div class="form-group">
+    <div class="input-field">
                 <input
                 id="search"
                 v-model="names"
@@ -31,7 +31,7 @@ function openFileDialog() {
             />
     </div>
     <h2>E-Mail</h2>
-    <div class="form-group">
+    <div class="input-field">
                 <input
                 id="search"
                 v-model="email"
@@ -39,7 +39,7 @@ function openFileDialog() {
             />
     </div>
     <h2>Passwort</h2>
-    <div class="form-group">
+    <div class="input-field">
                 <input
                 id="search"
                 v-model="password"
@@ -51,12 +51,12 @@ function openFileDialog() {
             <img src="@/assets/sigma.webp" alt="">
         </div>
 
-        <button @click="openFileDialog">Profilbild ändern</button>
+        <button class="button" @click="openFileDialog">Profilbild ändern</button>
     </div>
     
     <input type="file" ref="fileInput" style="display: none;" />
 
-    <button>Änderungen speichern</button>
+    <button class="button">Änderungen speichern</button>
 </div>
 </div>
 </template>
@@ -100,13 +100,47 @@ function openFileDialog() {
 .profilpicture  {
     background: none;
     border: none;
-    cursor: pointer;
 }
 
 .profilpicture-content
 {
+    padding-top: 20px;
     display: flex;
     flex-direction: row;
     justify-content: center;
+    padding-bottom: 30px;
+}
+
+.input-field{
+        flex: 1;                      
+    display: flex;
+    justify-content: center; 
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 16px;
+    }
+ 
+    input {
+        width: 100%;
+        padding: 14px 18px;
+        border-radius: 20px;
+        border: none;
+        background: #f3f3f3;
+        font-size: 16px;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
+    }
+
+
+}
+
+.button {
+    color: white;
+    background-color: var(--background);
+    border: none;
+    border-radius: 12px;
+    padding: 8px 16px;    
+    cursor: pointer;
 }
 </style>
