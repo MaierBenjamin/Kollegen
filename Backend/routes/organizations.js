@@ -1,6 +1,7 @@
 import express from 'express'
 import checkAuth from '../middleware/check-auth.js'
 import { routeWrapper } from '../error-handling.js'
+import * as organizationHandler from '../handlers/organizations.js'
 
 const organizationRouter = express.Router()
 

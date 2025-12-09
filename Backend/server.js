@@ -3,6 +3,11 @@ import session from 'express-session'
 import cors from 'cors'
 import dotenv from 'dotenv'
 
+import userRouter from './routes/users.js'
+import groupRouter from './routes/groups.js'
+import organizationRouter from './routes/organizations.js'
+import chatRouter from './routes/chats.js'
+
 import { createSessionStore } from './database/db.js'
 
 dotenv.config()
@@ -33,6 +38,12 @@ app.use(session({
     maxAge: 1000 * 60 * 60 * 24 * 7
   }
 }))
+
+// routes
+app.use("/users", userRouter)
+app.use("/groups", groupRouter)
+app.use("/chats", chatRouter)
+app.use("/organizations", organizationRouter)
 
 const port = process.env.PORT
 app.listen(port, () => console.log(`Server running on port ${port}`))

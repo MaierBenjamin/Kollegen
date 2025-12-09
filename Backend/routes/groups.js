@@ -2,6 +2,7 @@ import express from 'express'
 import checkAuth from '../middleware/check-auth.js'
 import { routeWrapper } from '../error-handling.js'
 import upload from '../middleware/upload.js'
+import * as groupHandler from '../handlers/groups.js'
 
 const groupRouter = express.Router()
 
