@@ -44,7 +44,21 @@ function onPFPClick() {
   </div>
 </template>
 
-<style scoped lang="scss">
+<style scoped>
+.router-wrapper {
+  width: 100%;
+  display: block;
+}
+ 
+body, html, #app {
+  margin: 0;
+  padding: 0;
+  background-color: var(--background);
+  font: inherit;
+  height: 100%;
+  width: 100%;
+}
+
 .top-bar {
   display: flex;
   align-items: center;
@@ -52,7 +66,7 @@ function onPFPClick() {
   width: 100%;
   padding: 0 20px;
   height: 70px;
-  background-color: var(--background);
+  background-color: #6264a7;
   border-bottom: 1px solid white;
   box-sizing: border-box;
 }

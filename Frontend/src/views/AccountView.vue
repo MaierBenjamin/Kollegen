@@ -63,20 +63,17 @@ function selectOption(org) {
   </div>
 </template>
 
-<style lang="scss" scoped>
-
+<style scoped>
 .account-content {
-
   display: flex;
-    flex-direction: column;
-    font-family: Arial, Helvetica, sans-serif;
-  width: 400px; 
+  flex-direction: column;
+  font-family: Arial, Helvetica, sans-serif;
+  width: 400px;
   margin: 0 auto;
   padding: 20px;
   background: white;
   border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    margin: 0 auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .page-wrapper {
@@ -87,81 +84,77 @@ function selectOption(org) {
   margin: 0 auto;
 }
 
-.h1{
-    font-family:Arial, Helvetica, sans-serif;
-    text-align: center;
+.h1 {
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
 }
 
 .profilpicture img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    object-fit: cover;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
-.profilpicture  {
-    background: none;
-    border: none;
+.profilpicture {
+  background: none;
+  border: none;
 }
 
-.profilpicture-content
-{
-    padding-top: 20px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    padding-bottom: 30px;
-    align-items: center;
+.profilpicture-content {
+  padding-top: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding-bottom: 30px;
+  align-items: center;
 }
 
-.input-field{
-        flex: 1;                      
-    display: flex;
-    justify-content: center; 
+.input-field {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
 
-    label {
-        display: block;
-        margin-bottom: 8px;
-        font-size: 16px;
-    }
- 
-    input {
-        width: 100%;
-        padding: 14px 18px;
-        border-radius: 20px;
-        border: none;
-        background: #f3f3f3;
-        font-size: 16px;
-        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
-  
-    }
+.input-field label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 16px;
+}
 
-
+.input-field input {
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 20px;
+  border: none;
+  background: #f3f3f3;
+  font-size: 16px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
 .button {
-    margin-top: 20px;
-    color: white;
-    background-color: var(--background);
-    border: none;
-    border-radius: 12px;
-    padding: 8px 16px;
-    cursor: pointer;
-    height: 40px;
-    transition: all 0.3s ease; 
+  margin-top: 20px;
+  color: white;
+  background-color: var(--background);
+  border: none;
+  border-radius: 12px;
+  padding: 8px 16px;
+  cursor: pointer;
+  height: 40px;
+  transition: all 0.3s ease;
 }
 
 .button:hover {
-    filter: brightness(0.9);
+  filter: brightness(0.9);
 }
 
-.dropdown-btn{
+.dropdown-btn {
   border: none;
   background: none;
   cursor: pointer;
 }
-.dropdown-list{
-    cursor: pointer;
-}
 
+.dropdown-list {
+  cursor: pointer;
+}
 </style>
