@@ -95,6 +95,17 @@ const handleRegister = async () => {
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.35);
 }
 
+.account-page {
+    min-height: 100vh;
+    background-color: #6264a7;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 70px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
 /* Titel */
 .register-title {
   text-align: center;

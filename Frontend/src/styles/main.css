@@ -1,3 +1,24 @@
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Der Root von Vue soll exakt den Viewport füllen */
+#app {
+  height: 100vh;       /* wichtig: verhindert “#app wird größer als screen” */
+  overflow: hidden;    /* verhindert extra scroll-space */
+  background: #e2e3ff; /* dein Hintergrund */
+}
+
+/* Optional: falls du .router-wrapper nutzt */
+.router-wrapper {
+  height: 100%;
+  width: 100%;
+}
+
 * {
     color: black;
 }

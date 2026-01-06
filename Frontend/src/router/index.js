@@ -3,43 +3,32 @@ import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import HomeView from '@/views/HomeView.vue'
 import AccountView from '@/views/AccountView.vue'
-import GroupView from '@/views/GroupView.vue'
+import AuthLayout from '@/layouts/AuthLayout.vue'
+import AppLayout from '@/layouts/AppLayout.vue'
+import NewGroupView from '@/views/NewGroupView.vue'
+
  
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
-      name: 'Home',
-      component: HomeView
+      path: "/",
+      component: AppLayout,
+      children: [
+        { path: "", name: "home", component: HomeView },
+        { path: "account", name: "account", component: AccountView },
+        { path: "new-group", name: "new-group", component: NewGroupView },
+
+      ],
     },
     {
-      path: '/',
-      name: 'Home',
-      component: HomeView
+      path: "/",
+      component: AuthLayout,
+      children: [
+        { path: "login", name: "login", component: LoginView },
+        { path: "register", name: "register", component: RegisterView },
+      ],
     },
-    {
-      path: '/login',
-      name: 'Login',
-      component: LoginView
-    },
-    {
-      path: '/register',
-      name: 'Register',
-      component: RegisterView
-    },
-    {
-      path: '/account',
-      name: 'Account',
-      component: AccountView
-    },
-    {
-      path: '/group/:id',
-      name: 'Group',
-      component: GroupView
-    },
-   
-   
   ],
 })
 export default router
