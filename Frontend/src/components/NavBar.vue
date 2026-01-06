@@ -31,7 +31,7 @@ function onPFPClick() {
     </div>
 
     <div class="form-group">
-      <input v-model="searchtext" placeholder="Search" />
+      <input v-model="searchtext" placeholder="Suchen" />
     </div>
 
     <div
@@ -78,6 +78,7 @@ function onPFPClick() {
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
   }
 }
+
 
 .profilpicture {
   width: 50px;

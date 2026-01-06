@@ -1,6 +1,30 @@
 <script setup>
+import router from '@/router';
 
-const groups = ["Gruppe 1", "Gruppe 2", "Gruppe 3", "Gruppe 4", "Gruppe 5"] 
+
+const groups = []
+
+const group = ({
+  id: 1,
+  name: "Gruppe 1",
+  organizationId: 1,
+})
+
+const group2 = ({
+  id: 2,
+  name: "Gruppe 2",
+  organizationId: 1,
+})
+
+const group3 = ({
+  id: 3,
+  name: "Gruppe 3",
+  organizationId: 1,
+})
+
+groups.push(group)
+groups.push(group2)
+groups.push(group3)
 
 </script>
 
@@ -11,9 +35,9 @@ const groups = ["Gruppe 1", "Gruppe 2", "Gruppe 3", "Gruppe 4", "Gruppe 5"]
 <template>
   <div class="home-view">
     <img class="settings-icon" src="@/assets/settings.svg" alt="Settings" />        
-
-    <div class="gruppen-card" v-for="group in groups">
-      <h2>{{ group }}</h2>
+    <div class="gruppen-card" v-for="group in groups" @click="router.push({ name: 'Group', params: { id: group.id  } })
+">
+      <h2>{{ group.name }}</h2>
 
     </div>
 
@@ -22,7 +46,9 @@ const groups = ["Gruppe 1", "Gruppe 2", "Gruppe 3", "Gruppe 4", "Gruppe 5"]
  
  
  
-<style lang="scss" scoped>
+<style scoped>
+
+  
 .home-view {
   margin-top: 3%;
   position: relative;
