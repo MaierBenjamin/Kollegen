@@ -17,7 +17,6 @@ const groups = ["Gruppe 1", "Gruppe 2", "Gruppe 3", "Gruppe 4", "Gruppe 5", "Gru
       :key="group"
       @click="$router.push('/group-view')"
     >
-    <div class="gruppen-card" v-for="group in groups" @click="$router.push('/group-view')">
       <h2>{{ group }}</h2>
     </div>
   </div>

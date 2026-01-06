@@ -23,9 +23,7 @@ const router = createRouter({
         { path: "account", name: "account", component: AccountView },
         { path: "new-group", name: "new-group", component: AllgemeinView },
         { path: "neu_rollen", name: "neu_rollen", component: NewRollenView },
-        { path: "new-group", name: "new-group", component: NewGroupView },
         { path: "group-view", name: "group-view", component: GroupView },
-        { path: "new-group", name: "new-group", component: NewGroupView },
         { path: "direct-message", name: "direct-message", component: DirectMessageView },
 
       ],
