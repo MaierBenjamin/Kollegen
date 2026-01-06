@@ -4,94 +4,84 @@ import { useRouter } from "vue-router";
 
 const router = useRouter();
 
-// Liste der Kanäle 
-const channels = ref<string[]>(["Allgemein"]);
+// Liste der Rollen
+const roles = ref<string[]>(["@member"]);
 
-// Neues Feld 
-const newChannel = ref<string>("");
+// Neues Feld
+const newRole = ref<string>("");
 
-// Kanal hinzufügen
-function addChannel() {
-  const name = newChannel.value.trim();
+// Rolle hinzufügen
+function addRole() {
+  const name = newRole.value.trim();
   if (!name) return;
 
-  if (channels.value.includes(name)) return;
+  if (roles.value.includes(name)) return;
 
-  channels.value.push(name);
-  newChannel.value = "";
+  roles.value.push(name);
+  newRole.value = "";
 }
 
-// Kanal entfernen
-function removeChannel(index: number) {
-  if (channels.value[index] === "Allgemein") return;
-  channels.value.splice(index, 1);
+// Rolle entfernen
+function removeRole(index: number) {
+  if (roles.value[index] === "@member") return;
+  roles.value.splice(index, 1);
 }
-
 </script>
 
 <template>
   <div class="page">
     <aside class="sidebar">
-      <div class="nav-item active">
+      <div class="nav-item" @click="router.push('/new-group')">
         <img class="icon" src="@/assets/settings.svg" alt="settings" />
         <span>Allgemein</span>
       </div>
 
-      <div class="nav-item" @click="router.push('/neu_rollen')">
+      <div class="nav-item active">
         <img class="icon" src="@/assets/members.svg" alt="members" />
         <span>Rollen</span>
       </div>
     </aside>
 
     <main class="content">
-      <h2>Allgemein</h2>
+      <h2>Rollen</h2>
 
-      <form class="mannschafts-name" @submit.prevent>
-        <!-- Mannschaftsname -->
+      <form class="rollen-form" @submit.prevent>
         <div class="form-group">
-          <label for="name">Mannschaftsname</label>
-          <input />
-        </div>
+          <label>Rollen</label>
 
-        <!-- Kanäle -->
-        <div class="form-group">
-          <label>Kanäle</label>
-
-          <!-- vorhandene Kanäle anzeigen -->
-          <div class="channel-list">
-            <div class="channel-row" v-for="(c, i) in channels" :key="i">
+          <div class="role-list">
+            <div class="role-row" v-for="(c, i) in roles" :key="c">
               <input :value="c" readonly />
 
               <img
                 class="remove-btn"
                 src="@/assets/x.svg"
                 alt="Entfernen"
-                @click="removeChannel(i)"
-              > 
+                @click="removeRole(i)"
+              />
             </div>
           </div>
 
-          <!-- neuen Kanal hinzufügen -->
-          <div class="add-row">
+          <div class="add-role">
             <input
-              v-model="newChannel"
-              placeholder="Neuer Kanalname (z.B. News)"
-              @keydown.enter.prevent="addChannel"
+              v-model="newRole"
+              placeholder="Neuer Rollenname (z.B. Admin)"
+              @keydown.enter.prevent="addRole"
             />
 
             <img
               class="plus-icon"
               src="@/assets/circle-plus.svg"
               alt="Plus"
-              @click="addChannel"
+              @click="addRole"
             />
           </div>
         </div>
       </form>
-      <button>SPEICHERN</button>
     </main>
   </div>
 </template>
+
 
 
 <style scoped>
@@ -157,56 +147,41 @@ function removeChannel(index: number) {
   font-size: 16px;
 }
 
-.plus-icon {
-  height: 32px;
-  width: 32px;
-  cursor: pointer;
-  font-size: 18px;
-  display: flex;
-}
-
-.channel-list {
+.role-list {
   display: flex;
   flex-direction: column;
   gap: 10px;
   margin-bottom: 12px;
 }
 
-.channel-row {
+.role-row {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.remove-btn {
-  height: 32px;
-  width: 32px;
-  cursor: pointer;
-  font-size: 18px;
-  display: flex;
-}
-
-.add-row {
+.add-role {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-button {
-  margin-top: 32px;
-  width: 100%;
-  padding: 16px 0;
-  border-radius: 24px;
-  border: none;
-  background: #5f5fa4;
-  color: white;
-  font-size: 20px;
-  font-weight: 500;
+.plus-icon {
+  width: 32px;
+  height: 32px;
   cursor: pointer;
-  transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
 
-button:hover {
-  filter: brightness(0.9);
+.remove-btn {
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  opacity: 0.8;
 }
+
+.remove-btn:hover {
+  opacity: 1;
+}
+
+
 </style>

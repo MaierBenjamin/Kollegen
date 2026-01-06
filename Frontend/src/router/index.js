@@ -6,7 +6,7 @@ import AccountView from '@/views/AccountView.vue'
 import AuthLayout from '@/layouts/AuthLayout.vue'
 import AppLayout from '@/layouts/AppLayout.vue'
 import AllgemeinView from '@/views/new_group/AllgemeinView.vue'
-import MitgliederView from '@/views/new_group/MitgliederView.vue'
+import NewRollenView from '@/views/new_group/NewRollenView.vue'
 
 
  
@@ -20,7 +20,7 @@ const router = createRouter({
         { path: "", name: "home", component: HomeView },
         { path: "account", name: "account", component: AccountView },
         { path: "new-group", name: "new-group", component: AllgemeinView },
-        { path: "mitglieder", name: "mitglieder", component: MitgliederView },
+        { path: "neu_rollen", name: "neu_rollen", component: NewRollenView },
 
       ],
     },
