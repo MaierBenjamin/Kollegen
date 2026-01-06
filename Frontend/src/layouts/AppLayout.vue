@@ -16,7 +16,7 @@ import SideBar from "@/components/SideBar.vue"
 </script>
  
 <style scoped>
- 
+
 .layout {
   display: flex;
   flex-direction: column;
@@ -27,11 +27,11 @@ import SideBar from "@/components/SideBar.vue"
   display: flex;
   background-color: #e2e3ff;
 }
- 
+
 .router-wrapper {
   flex: 1;
   overflow-y: auto;
 }
- 
- 
+
+
 </style>
