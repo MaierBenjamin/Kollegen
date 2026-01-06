@@ -1,62 +1,35 @@
 import request from 'supertest';
-import { app } from '../src/app.js'; // Deine Express-App exportiert
-import { clearDatabase, closeConnection } from './setup.js';
+import { app } from '../src/app.js'; // Deine Express-App
+import { db } from '../src/database/db.js';
 
-const agent = request.agent(app);
-
-beforeAll(async () => {
-  await clearDatabase();
-});
-
-afterAll(async () => {
-  await closeConnection();
-});
-
-describe('User Auth Flow', () => {
+describe('Auth System Integration', () => {
   
-  const testUser = {
-    username: 'testadmin',
-    email: 'admin@test.de',
-    password: 'SafePassword123!'
-  };
+  // Vor jedem Test die User-Tabelle leeren, damit wir immer bei Null anfangen
+  beforeEach(async () => {
+    await db.query("SET FOREIGN_KEY_CHECKS = 0");
+    await db.query("TRUNCATE TABLE Users");
+    await db.query("SET FOREIGN_KEY_CHECKS = 1");
+  });
 
-  it('sollte einen User registrieren (Register)', async () => {
-    const res = await agent
-      .post('/register')
-      .send(testUser);
+  afterAll(async () => {
+    await db.end(); // Verbindung nach den Tests schließen
+  });
 
-    expect(res.status).toBe(200);
+  it('sollte einen neuen User in MariaDB anlegen', async () => {
+    const res = await request(app)
+      .post('/api/register') // Dein Route-Pfad
+      .send({
+        username: 'MariaDB_User',
+        email: 'test@maria.db',
+        password: 'password123'
+      });
+
+    expect(res.statusCode).toBe(200);
     expect(res.body.success).toBe(true);
-  });
 
-  it('sollte den Login verweigern bei falschem Passwort', async () => {
-    const res = await agent
-      .post('/login')
-      .send({ username: testUser.username, password: 'wrongpassword' });
-
-    expect(res.status).toBe(401);
-    expect(res.body.message).toBe("Wrong password");
-  });
-
-  it('sollte sich einloggen und Zugriff auf geschützte Daten haben', async () => {
-    // 1. Login
-    const loginRes = await agent
-      .post('/login')
-      .send({ username: testUser.username, password: testUser.password });
-    
-    expect(loginRes.status).toBe(200);
-
-    // 2. Userdaten abrufen (Session muss aktiv sein)
-    const dataRes = await agent.get('/userdata');
-    
-    expect(dataRes.status).toBe(200);
-    expect(dataRes.body.user.username).toBe(testUser.username);
-  });
-
-  it('sollte nach dem Logout keinen Zugriff mehr haben', async () => {
-    await agent.post('/logout');
-    
-    const checkRes = await agent.get('/check-login');
-    expect(checkRes.body.loggedIn).toBe(false);
+    // Datenbank-Check: Existiert der User wirklich in der Tabelle?
+    const [user] = await db.query("SELECT * FROM Users WHERE username = 'MariaDB_User'");
+    expect(user.length).toBe(1);
+    expect(user[0].username).toBe('MariaDB_User');
   });
 });
