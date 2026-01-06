@@ -58,8 +58,10 @@ CREATE TABLE ChannelMessages(
 CREATE TABLE DirectMessages(
   directMessageId INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   content TEXT,
+  fk_OrganizationId INT UNSIGNED,
   fk_SendingUserId INT UNSIGNED NULL,
   fk_ReceivingUserId INT UNSIGNED NULL,
+  FOREIGN KEY (fk_OrganizationId) REFERENCES Organizations(organizationId) ON DELETE CASCADE,
   FOREIGN KEY (fk_SendingUserId) REFERENCES Users(userId) ON DELETE SET NULL,
   FOREIGN KEY (fk_ReceivingUserId) REFERENCES Users(userId) ON DELETE SET NULL
 );

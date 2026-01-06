@@ -22,6 +22,10 @@ export async function leaveGroup(req, res) {
 
 }
 
+export async function getChannelMessages(req, res) {
+
+}
+
 export async function sendChannelMessage(req, res) {
 
 }

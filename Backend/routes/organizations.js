@@ -10,6 +10,6 @@ organizationRouter.delete("/delete", checkAuth, routeWrapper(organizationHandler
 organizationRouter.patch("/edit", checkAuth, routeWrapper(organizationHandler.editOrganization))
 organizationRouter.patch("/change-userrole", checkAuth, routeWrapper(organizationHandler.changeUserRole))
 organizationRouter.post("/join", checkAuth, routeWrapper(organizationHandler.joinOrganization))
-organizationRouter.delete("/delete", checkAuth, routeWrapper(organizationHandler.leaveOrganization))
+organizationRouter.delete("/leave", checkAuth, routeWrapper(organizationHandler.leaveOrganization))
 
 export default organizationRouter
