@@ -6,7 +6,7 @@
         <router-link to="/" class="logo">
             <img src="@/assets/group.svg" alt="">
         </router-link>
-        <router-link to="/" class="logo">
+        <router-link to="/direct-message" class="logo">
             <img src="@/assets/chat.svg" alt="">
         </router-link>
         

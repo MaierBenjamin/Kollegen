@@ -1,84 +1,57 @@
-<script>
-export default {
-  data() {
-    return {
-      activeTab: 'chat',
-    }
-  }
-}
-</script>
-
 <script setup>
 import Chat from '@/components/Chat.vue';
-import Files from '@/components/Files.vue';
 import { ref } from 'vue'
 
-const group3 = ref({
-  id: 3,
-  name: "Gruppe 3",
-  organizationId: 1,
-  channels: {
-    channel1: {
-      channelId: 1,
-      channelName: "Allgemein"
-    },
-    channel2: {
-      channelId: 2,
-      channelName: "Kanal 2"
-    },
-    channel3: {
-      channelId: 3,
-      channelName: "Kanal 3"
-    },
-    channel4: {
-      channelId: 3,
-      channelName: "Allgemein 3"
-    },
-  }
-})
+const user = {
+  id: 1,
+  name: "Julian",
+};
+
+const chats = ref([
+  {
+    id: 1,
+    name: "Janik",
+  },
+  {
+    id: 2,
+    name: "Pascal",
+  },
+  {
+    id: 3,
+    name: "Benjamin",
+  },
+]);
+  
 </script>
 
 
 <template>
 
 <div class="top">
-  <h1>{{ group3.name }}</h1>
+  <h1>Chat</h1>
     <div>
     <div class="tabs">
-      <h2 
-        :class="{ active: activeTab === 'chat' }" 
-        @click="activeTab = 'chat'">
-        Chat
-      </h2>
-      <h2 
-        :class="{ active: activeTab === 'files' }" 
-        @click="activeTab = 'files'">
-        Dateien
+      <h2>
+        {{user.name}}
       </h2>
     </div>
   </div>
-  <img class="settings-icon" src="@/assets/settings.svg" alt="Settings" />        
 </div>
 
 <div class="main-wrapper">
   <div class="side">
-    <div v-for="channel in group3.channels" :key="channel.channelId" class="channel-item">
-      <h4>{{ channel.channelName }}</h4>
+    <div v-for="chat in chats" :key="chat.id" class="channel-item">
+      <h4>{{ chat.name }}</h4>
     </div>
   </div>
   <div class="group-page">
-<div v-if="activeTab === 'chat'">
+    <div>
         <Chat/>
-      </div>
-      <div v-if="activeTab === 'files'">
-        <Files/>
-      </div>
+    </div>
 </div>
 </div>
 
 </template>
-
-
 
 <style>
 

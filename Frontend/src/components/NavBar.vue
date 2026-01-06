@@ -2,8 +2,40 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
+
 const router = useRouter()
-const searchtext = ref('')
+
+const searchtext = ref("")
+
+const isSearchActive = ref(false)
+
+function startChat(user) {
+  console.log("Starte Chat mit:", user)
+  isSearchActive.value = false
+  searchtext.value = ""
+}
+
+const users = ref([
+  { id: 1, username: "Janik" },
+  { id: 2, username: "Pascal" },
+  { id: 3, username: "Benjamin" },
+  { id: 4, username: "Julian" },
+])
+
+
+const showUserList = ref(false);
+
+const filteredUsers = computed(() => {
+  return users.value.filter(user =>
+    user.username.toLowerCase().includes(searchtext.value.toLowerCase())
+  );
+});
+
+function openNewChat() {
+  if (showUserList.value === false) showUserList.value = true
+  else (showUserList.value = false)
+}
+
 
 const username = ref("Pascal")
 
@@ -30,9 +62,31 @@ function onPFPClick() {
       </router-link>
     </div>
 
-    <div class="form-group">
-      <input v-model="searchtext" placeholder="Suchen" />
+
+<div class="search-wrapper">
+
+  <input
+    v-model="searchtext"
+    placeholder="Neuer Chat"
+    class="search-input"
+    @focus="isSearchActive = true"
+  />
+
+  <div v-if="isSearchActive" class="user-list-wrapper">
+    <div
+      v-for="user in filteredUsers"
+      :key="user.id"
+      class="user-item"
+      @click="startChat(user)"
+    >
+      {{ user.username }}
     </div>
+  </div>
+
+</div>
+
+
+
 
     <div
       class="profilpicture"
@@ -111,4 +165,58 @@ body, html, #app {
     filter: brightness(0.9);
   }
 }
+
+
+.search-wrapper {
+  position: relative;
+  width: 50%;
+}
+
+.user-list-wrapper {
+  position: absolute;
+  top: 55px;
+  left: 0;
+  width: 100%;
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  z-index: 1000;
+}
+
+
+
+.search-input {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  outline: none;
+}
+
+.user-item {
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.user-item:hover {
+  background: #e5e7eb;
+}
+.top-bar {
+  position: relative;
+}
+
+.fake-search {
+  width: 50%;
+  padding: 14px 18px;
+  border-radius: 20px;
+  background: #f3f3f3;
+  font-size: 16px;
+  color: #888;
+  cursor: text;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
 </style>

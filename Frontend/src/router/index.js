@@ -6,6 +6,8 @@ import AccountView from '@/views/AccountView.vue'
 import AuthLayout from '@/layouts/AuthLayout.vue'
 import AppLayout from '@/layouts/AppLayout.vue'
 import NewGroupView from '@/views/NewGroupView.vue'
+import GroupView from '@/views/GroupView.vue'
+import DirectMessageView from '@/views/DirectMessageView.vue'
 
  
 const router = createRouter({
@@ -18,6 +20,9 @@ const router = createRouter({
         { path: "", name: "home", component: HomeView },
         { path: "account", name: "account", component: AccountView },
         { path: "new-group", name: "new-group", component: NewGroupView },
+        { path: "group-view", name: "group-view", component: GroupView },
+        { path: "new-group", name: "new-group", component: NewGroupView },
+        { path: "direct-message", name: "direct-message", component: DirectMessageView },
 
       ],
     },
