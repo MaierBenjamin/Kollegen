@@ -10,10 +10,11 @@ html, body {
 
 /* Der Root von Vue soll exakt den Viewport füllen */
 #app {
-  height: 100vh;       /* wichtig: verhindert “#app wird größer als screen” */
-  overflow: hidden;    /* verhindert extra scroll-space */
-  background: #e2e3ff; /* dein Hintergrund */
+  height: 100vh;
+  overflow: auto;   /* <-- statt hidden */
+  background: #e2e3ff;
 }
+
 
 /* Optional: falls du .router-wrapper nutzt */
 .router-wrapper {
