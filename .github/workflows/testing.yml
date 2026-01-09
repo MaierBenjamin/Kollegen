@@ -72,7 +72,7 @@ jobs:
       - name: Initialize Database (Tables)
         # Führt dein neues JS-Setup-Skript aus, um Tabellen anzulegen
         run: |
-          mysql -h 127.0.0.1 -u root -ptestpassword kollegen_test_db < Backend/src/database/schema.sql
+          mysql -h 127.0.0.1 -u root -ptestpassword kollegen_test_db < Backend/src/database/db-setup.sql
         env:
           DB_HOST: 127.0.0.1
           DB_USER: root
