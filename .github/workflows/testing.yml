@@ -71,7 +71,8 @@ jobs:
 
       - name: Initialize Database (Tables)
         # Führt dein neues JS-Setup-Skript aus, um Tabellen anzulegen
-        run: npm run db:init-test
+        run: |
+          mysql -h 127.0.0.1 -u root -ptestpassword kollegen_test_db < Backend/src/database/schema.sql
         env:
           DB_HOST: 127.0.0.1
           DB_USER: root
