@@ -2,53 +2,37 @@ name: Kollegen Testing Pipeline
 
 on:
   push:
-    branches-ignore: ["main"]   # läuft auf allen Dev-Branches
+    branches: ["main", "testing", "Dev", "Backend"] # Deckt alle deine Arbeitsbereiche ab
   pull_request:
-    branches: ["main"]          # PRs auf main werden getestet
+    branches: ["main"]
 
 jobs:
-  # -------------------------
-  # FRONTEND BUILD (nur Build, keine Tests)
-  # -------------------------
+  # 1. Job: Prüft, ob das Frontend fehlerfrei baut
   frontend-build:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./Frontend
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: "18"
+          node-version: "20"
           cache: "npm"
           cache-dependency-path: "./Frontend/package-lock.json"
+      - run: npm ci
+      - run: npm run build
 
-      - name: Install Dependencies
-        run: npm ci
-
-      - name: Build Frontend
-        run: npm run build
-
-      - name: Upload Frontend Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: frontend-dist
-          path: ./Frontend/dist
-
-  # -------------------------
-  # BACKEND TESTS
-  # -------------------------
+  # 2. Job: Führt die Backend-Integrationstests aus
   backend-test:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./Backend
     services:
+      # Startet eine echte MariaDB in der GitHub-Cloud
       mariadb:
-        image: mariadb:10.6
+        image: mariadb:10.11
         env:
           MYSQL_ROOT_PASSWORD: testpassword
           MYSQL_DATABASE: kollegen_test_db
@@ -66,28 +50,41 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "18"
+          node-version: "22" # Passend zu deiner lokalen Node-Version
           cache: "npm"
           cache-dependency-path: "./Backend/package-lock.json"
 
       - name: Install Dependencies
         run: npm ci
 
-      - name: Wait for DB
+      - name: Wait for MariaDB to be ready
         run: |
           for i in {1..10}; do
             if mysqladmin ping -h 127.0.0.1 -u root --password=testpassword --silent; then
-              echo "MariaDB ready"
+              echo "✅ MariaDB ist bereit"
               exit 0
             fi
+            echo "⏳ Warte auf MariaDB..."
             sleep 2
           done
           exit 1
 
-      - name: Run Backend Tests
+      - name: Initialize Database (Tables)
+        # Führt dein neues JS-Setup-Skript aus, um Tabellen anzulegen
+        run: npm run db:init-test
+        env:
+          DB_HOST: 127.0.0.1
+          DB_USER: root
+          DB_PASSWORD: testpassword
+          DB_NAME: kollegen_test_db
+          NODE_ENV: test
+
+      - name: Run Integration Tests
+        # Startet Jest und prüft deine auth.test.js
         run: npm test
         env:
           DB_HOST: 127.0.0.1
           DB_USER: root
-          DB_PASS: testpassword
+          DB_PASSWORD: testpassword # Wichtig: Nutzt jetzt PASSWORD statt PASS
           DB_NAME: kollegen_test_db
+          NODE_ENV: test
