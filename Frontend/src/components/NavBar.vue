@@ -1,13 +1,11 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 
-
 const router = useRouter()
-
 const searchtext = ref("")
-
 const isSearchActive = ref(false)
+const searchWrapper = ref(null) // 👈 hier der Wrapper Ref
 
 function startChat(user) {
   console.log("Starte Chat mit:", user)
@@ -22,23 +20,13 @@ const users = ref([
   { id: 4, username: "Julian" },
 ])
 
-
-const showUserList = ref(false);
-
 const filteredUsers = computed(() => {
   return users.value.filter(user =>
     user.username.toLowerCase().includes(searchtext.value.toLowerCase())
-  );
-});
-
-function openNewChat() {
-  if (showUserList.value === false) showUserList.value = true
-  else (showUserList.value = false)
-}
-
+  )
+})
 
 const username = ref("Pascal")
-
 const firstLetter = computed(() => {
   return username.value
     .split(' ')
@@ -52,7 +40,30 @@ const pfpColor = ref(colors[Math.floor(Math.random() * colors.length)])
 function onPFPClick() {
   router.push('/account')
 }
+
+function handleClickOutside(event) {
+  if (searchWrapper.value && !searchWrapper.value.contains(event.target)) {
+    isSearchActive.value = false
+  }
+}
+
+function handleEscape(event) {
+  if (event.key === 'Escape') {
+    isSearchActive.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+  document.addEventListener('keydown', handleEscape)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', handleClickOutside)
+  document.removeEventListener('keydown', handleEscape)
+})
 </script>
+
 
 <template>
   <div class="top-bar">
@@ -63,8 +74,7 @@ function onPFPClick() {
     </div>
 
 
-<div class="search-wrapper">
-
+<div class="search-wrapper" ref="searchWrapper">
   <input
     v-model="searchtext"
     placeholder="Neuer Chat"
@@ -82,11 +92,7 @@ function onPFPClick() {
       {{ user.username }}
     </div>
   </div>
-
 </div>
-
-
-
 
     <div
       class="profilpicture"

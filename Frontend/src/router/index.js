@@ -11,7 +11,7 @@ import NewRollenView from '@/views/new_group/NewRollenView.vue'
 import GroupView from '@/views/GroupView.vue'
 import DirectMessageView from '@/views/DirectMessageView.vue'
 
- 
+import AllGroupsView from '@/views/AllGroupsView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -25,6 +25,7 @@ const router = createRouter({
         { path: "neu_rollen", name: "neu_rollen", component: NewRollenView },
         { path: "group-view", name: "group-view", component: GroupView },
         { path: "direct-message", name: "direct-message", component: DirectMessageView },
+        { path: "all-groups", name: "all-groups", component: AllGroupsView },
 
       ],
     },

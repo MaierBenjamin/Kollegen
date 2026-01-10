@@ -1,6 +1,5 @@
 <script setup>
-import Chat from '@/components/Chat.vue';
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 const user = {
   id: 1,
@@ -8,115 +7,89 @@ const user = {
 };
 
 const chats = ref([
-  {
-    id: 1,
-    name: "Janik",
-  },
-  {
-    id: 2,
-    name: "Pascal",
-  },
-  {
-    id: 3,
-    name: "Benjamin",
-  },
+  { id: 1, name: "Janik" },
+  { id: 2, name: "Pascal" },
+  { id: 3, name: "Benjamin" },
 ]);
-  
+
+const activeChat = ref(chats.value[0])
+
+const allMessages = {
+  1: [
+    { id: 1, userId: 1, userName: "Julian", content: "Hey Janik!", timestamp: "10:15" },
+    { id: 2, userId: 2, userName: "Janik", content: "Hallo Julian", timestamp: "10:17" },
+  ],
+  2: [
+    { id: 3, userId: 2, userName: "Pascal", content: "Yo!", timestamp: "11:00" },
+  ],
+  3: [
+    { id: 4, userId: 3, userName: "Benjamin", content: "Hallo da", timestamp: "12:00" },
+  ],
+}
+
+const messages = ref(allMessages[activeChat.value.id] || [])
+
+function selectChat(chat) {
+  activeChat.value = chat
+  messages.value = allMessages[chat.id] || []
+}
+
+const newMessage = ref("")
+function sendMessage() {
+  if (!newMessage.value.trim()) return
+  const newId = (messages.value[messages.value.length - 1]?.id || 0) + 1
+  messages.value.push({
+    id: newId,
+    userId: user.id,
+    userName: user.name,
+    content: newMessage.value,
+    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  })
+  newMessage.value = ""
+}
 </script>
 
-
 <template>
+  <div class="top">
+    <h1>Direkt Chat</h1>
+  </div>
 
-<div class="top">
-  <h1>Chat</h1>
-    <div>
-    <div class="tabs">
-      <h2>
-        {{user.name}}
-      </h2>
+  <div class="main-wrapper">
+    <div class="side">
+      <div
+        v-for="chat in chats"
+        :key="chat.id"
+        :class="{ active: activeChat.id === chat.id }"
+        class="channel-item"
+        @click="selectChat(chat)"
+      >
+        {{ chat.name }}
+      </div>
+    </div>
+
+    <div class="group-page">
+      <div class="chat-container">
+        <div v-for="msg in messages" :key="msg.id" :class="msg.userId === user.id ? 'own-message' : 'other-message'">
+          <div class="messageInfo">
+            <div class="sender">{{ msg.userName }}</div>
+            <div class="messageDate">{{ msg.timestamp }}</div>
+          </div>
+          <div class="messageContent">{{ msg.content }}</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <input
+          v-model="newMessage"
+          placeholder="Schreibe eine Nachricht..."
+          @keyup.enter="sendMessage"
+        />
+      </div>
     </div>
   </div>
-</div>
-
-<div class="main-wrapper">
-  <div class="side">
-    <div v-for="chat in chats" :key="chat.id" class="channel-item">
-      <h4>{{ chat.name }}</h4>
-    </div>
-  </div>
-  <div class="group-page">
-    <div>
-        <Chat/>
-    </div>
-</div>
-</div>
-
 </template>
 
-<style>
-
-.form-group {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-
-  input {
-    width: 50%;
-    padding: 14px 18px;
-    border-radius: 20px;
-    border: none;
-    background: #f3f3f3;
-    font-size: 16px;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
-  }
-}
-
-.tabs {
-  display: flex;
-  flex-direction: row;
-  gap: 20px;
-}
-
-.message-card {
-  background: #e7e7ff;
-  border-radius: 20px;
-
-  width: min(700px, 70%); 
-  padding: 28px 40px;
-  margin-bottom: 18px;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  border: 2px solid black;
-}
-
-body, html, #app {
-  margin: 0;
-  padding: 0;
-  font-family: var(--font);
-  background: #fff;
-  height: 100%;
-  width: 100%;
-}
-
-.top {
-  display: flex;
-  flex-direction: row;
-  align-items: baseline;
-  gap: 1.5rem;
-  background-color: var(--background2);
-  padding: 1rem 2rem;
-}
-
-.settings-icon {
-  margin-left: auto;
-  width: 36px;
-  height: 36px;
-  cursor: pointer;
-}
-
+<style scoped>
 .main-wrapper {
   display: flex;
   min-height: 83.4%;
@@ -126,22 +99,87 @@ body, html, #app {
   display: flex;
   flex-direction: column;
   width: 15%;
-  height: 0vh;
   background-color: var(--background2);
   padding: 1rem;
+  cursor: pointer;
 }
 
 .channel-item {
-  display: flex;
-  flex-direction: column;
-  
+  padding: 10px;
+  margin-bottom: 6px;
+  border-radius: 8px;
+}
+
+.channel-item.active {
+  background-color: #d0d0ff;
+  font-weight: bold;
 }
 
 .group-page {
-  flex: 1; 
+  flex: 1;
   background: #fff;
   padding: 1rem;
-  
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 }
 
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-bottom: 12px;
+  overflow-y: auto;
+}
+
+.own-message {
+  align-self: flex-end;
+  background-color: #e2e3ff;
+  color: black;
+  padding: 8px 12px;
+  border-radius: 12px 12px 0 12px;
+  max-width: 70%;
+}
+
+.other-message {
+  align-self: flex-start;
+  background-color: #e5e7eb;
+  color: black;
+  padding: 8px 12px;
+  border-radius: 12px 12px 12px 0;
+  max-width: 70%;
+}
+
+.messageInfo {
+  display: flex;
+  gap: 10px;
+}
+
+.sender {
+  font-size: 14px;
+}
+
+.messageDate {
+  font-size: 13px;
+}
+
+.messageContent {
+  font-size: 17px;
+}
+
+/* Textfeld */
+.form-group {
+  margin-top: 12px;
+  display: flex;
+}
+
+.form-group input {
+  flex: 1;
+  padding: 14px 18px;
+  border-radius: 20px;
+  border: none;
+  font-size: 16px;
+  background: #f3f3f3;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
+}
 </style>
