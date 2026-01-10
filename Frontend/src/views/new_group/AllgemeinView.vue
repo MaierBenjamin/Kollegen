@@ -4,7 +4,6 @@ import { useRouter } from "vue-router";
 
 const router = useRouter();
 
-// Kanäle
 const channels = ref<string[]>(["Allgemein"]);
 const newChannel = ref<string>("");
 
@@ -25,7 +24,6 @@ function removeChannel(index: number) {
 
 <template>
   <div class="page">
-    <!-- Sidebar -->
     <aside class="sidebar">
       <div class="nav-item active">
         <img class="icon" src="@/assets/settings.svg" />
@@ -38,22 +36,18 @@ function removeChannel(index: number) {
       </div>
     </aside>
 
-    <!-- Content -->
     <main class="content">
       <h2>Allgemein</h2>
 
-      <!-- Mannschaftsname -->
       <div class="form-group">
         <label>Mannschaftsname</label>
         <input class="text-input" placeholder="Name der Mannschaft" />
       </div>
 
-      <!-- Kanäle -->
       <div class="form-group">
         <label>Kanäle</label>
 
         <div class="channels-inline">
-          <!-- bestehende Kanäle -->
           <div
             class="channel-chip"
             v-for="(c, i) in channels"
@@ -68,7 +62,6 @@ function removeChannel(index: number) {
             />
           </div>
 
-          <!-- neuer Kanal -->
           <input
             class="channel-input"
             v-model="newChannel"
@@ -96,7 +89,6 @@ function removeChannel(index: number) {
   background-color: #e2e3ff;
 }
 
-/* Sidebar */
 .sidebar {
   width: 30%;
   background: #d9d9d9;
@@ -131,7 +123,6 @@ function removeChannel(index: number) {
   height: 44px;
 }
 
-/* Content */
 .content {
   flex: 1;
   padding: 40px;
@@ -141,7 +132,6 @@ h2 {
   margin-bottom: 24px;
 }
 
-/* Form */
 .form-group {
   margin-bottom: 28px;
 }
@@ -152,7 +142,6 @@ h2 {
   font-size: 16px;
 }
 
-/* Text Inputs */
 .text-input {
   width: 100%;
   padding: 14px 18px;
@@ -163,7 +152,6 @@ h2 {
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
-/* Channels inline layout */
 .channels-inline {
   display: flex;
   align-items: center;
@@ -197,7 +185,6 @@ h2 {
   box-shadow: inset 0 2px 4px rgba(0,0,0,0.15);
 }
 
-/* Icons */
 .plus-icon,
 .remove-btn {
   width: 32px;
@@ -206,7 +193,6 @@ h2 {
   flex: 0 0 auto;
 }
 
-/* Button */
 button {
   margin-top: 36px;
   width: 100%;
