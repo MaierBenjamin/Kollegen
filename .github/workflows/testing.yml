@@ -69,7 +69,7 @@ jobs:
           done
           exit 1
 
-    -  name: Initialize Database (Tables)
+      - name: Initialize Database (Tables)
         run: |
           mysql -h 127.0.0.1 -u root -ptestpassword kollegen_test_db < $GITHUB_WORKSPACE/Backend/src/database/schema.sql
         env:
