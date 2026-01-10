@@ -71,7 +71,12 @@ jobs:
 
       - name: Initialize Database (Tables)
         run: |
-          mysql -h 127.0.0.1 -u root -ptestpassword kollegen_test_db < $GITHUB_WORKSPACE/Backend/src/database/schema.sql
+          echo "Initialisiere Tabellen in kollegen_test_db..."
+          # Wir erzwingen die Nutzung der richtigen DB direkt im Befehl
+          mysql -h 127.0.0.1 -u root -ptestpassword -D kollegen_test_db < src/database/schema.sql
+          
+          echo "Kontrolle: Vorhandene Tabellen:"
+          mysql -h 127.0.0.1 -u root -ptestpassword -D kollegen_test_db -e "SHOW TABLES;"
         env:
           DB_HOST: 127.0.0.1
           DB_USER: root
