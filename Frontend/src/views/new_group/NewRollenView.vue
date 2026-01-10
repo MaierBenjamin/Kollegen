@@ -4,24 +4,18 @@ import { useRouter } from "vue-router";
 
 const router = useRouter();
 
-// Liste der Rollen
 const roles = ref<string[]>(["@member"]);
-
-// Neues Feld
 const newRole = ref<string>("");
 
-// Rolle hinzufügen
 function addRole() {
   const name = newRole.value.trim();
   if (!name) return;
-
   if (roles.value.includes(name)) return;
 
   roles.value.push(name);
   newRole.value = "";
 }
 
-// Rolle entfernen
 function removeRole(index: number) {
   if (roles.value[index] === "@member") return;
   roles.value.splice(index, 1);
@@ -45,44 +39,41 @@ function removeRole(index: number) {
     <main class="content">
       <h2>Rollen</h2>
 
-      <form class="rollen-form" @submit.prevent>
-        <div class="form-group">
-          <label>Rollen</label>
+      <div class="form-group">
+        <label>Rollen</label>
 
-          <div class="role-list">
-            <div class="role-row" v-for="(c, i) in roles" :key="c">
-              <input :value="c" readonly />
-
-              <img
-                class="remove-btn"
-                src="@/assets/x.svg"
-                alt="Entfernen"
-                @click="removeRole(i)"
-              />
-            </div>
-          </div>
-
-          <div class="add-role">
-            <input
-              v-model="newRole"
-              placeholder="Neuer Rollenname (z.B. Admin)"
-              @keydown.enter.prevent="addRole"
-            />
+        <div class="roles-inline">
+          <!-- bestehende Rollen als "Chips" -->
+          <div class="role-chip" v-for="(r, i) in roles" :key="r + i">
+            <span>{{ r }}</span>
 
             <img
-              class="plus-icon"
-              src="@/assets/circle-plus.svg"
-              alt="Plus"
-              @click="addRole"
+              v-if="r !== '@member'"
+              class="remove-btn"
+              src="@/assets/x.svg"
+              alt="Entfernen"
+              @click="removeRole(i)"
             />
           </div>
+
+          <input
+            class="role-input"
+            v-model="newRole"
+            placeholder="Neuer Rollenname (z.B. Admin)"
+            @keydown.enter.prevent="addRole"
+          />
+
+          <img
+            class="plus-icon"
+            src="@/assets/circle-plus.svg"
+            alt="Plus"
+            @click="addRole"
+          />
         </div>
-      </form>
+      </div>
     </main>
   </div>
 </template>
-
-
 
 <style scoped>
 .page {
@@ -127,12 +118,49 @@ function removeRole(index: number) {
 
 .content {
   flex: 1;
-  padding: 40px;    
+  padding: 40px;
 }
 
-.form-group input {
+h2 {
+  margin-bottom: 24px;
+}
+
+.form-group {
+  margin-top: 12px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.roles-inline {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  row-gap: 12px;
+  flex-wrap: wrap;
   width: 100%;
-  padding: 14px 18px;
+}
+
+.role-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  border-radius: 20px;
+  background: #f3f3f3;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
+  font-size: 16px;
+  white-space: nowrap;
+}
+
+.role-input {
+  flex: 1;            /* nimmt restlichen Platz */
+  min-width: 280px;   /* verhindert mini-input */
+  width: auto;        /* wichtig: nicht 100% */
+  padding: 12px 18px;
   border-radius: 20px;
   border: none;
   background: #f3f3f3;
@@ -140,36 +168,11 @@ function removeRole(index: number) {
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
-.form-group label {
-  display: block;
-  margin-bottom: 8px;
-  margin-top: 20px;
-  font-size: 16px;
-}
-
-.role-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 12px;
-}
-
-.role-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.add-role {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
 .plus-icon {
   width: 32px;
   height: 32px;
   cursor: pointer;
+  flex: 0 0 auto;
 }
 
 .remove-btn {
@@ -177,11 +180,10 @@ function removeRole(index: number) {
   height: 28px;
   cursor: pointer;
   opacity: 0.8;
+  flex: 0 0 auto;
 }
 
 .remove-btn:hover {
   opacity: 1;
 }
-
-
 </style>
