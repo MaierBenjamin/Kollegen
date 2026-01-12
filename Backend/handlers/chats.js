@@ -35,7 +35,8 @@ export async function getChat(req, res) {
   const [chatMessages] = await safeOperation(
     () => db.query(`
       select directMessageId as messageId, content as message, fk_SendingUserId as sendingUser from DirectMessages 
-      where fk_SendingUserId in (?,?) and fk_ReceivingUserId in (?,?) and fk_OrganizationId = ?`,
+      where fk_SendingUserId in (?,?) and fk_ReceivingUserId in (?,?) and fk_OrganizationId = ?
+      order by directMessageId asc`,
       [req.session.user.id, chatPartnerId, req.session.user.id, chatPartnerId, organizationId]
     ),
     "Error while retrieving chat messages from database"
@@ -50,19 +51,19 @@ export async function getAllChats(req, res) {
 
   const [chats] = await safeOperation(
     () => db.query(
-      "select fk_SendingUserId, fk_ReceivingUserId from DirectMessages where (fk_SendingUserId = ? or fk_ReceivingUserId = ?) and organizationId = ?",
+      "select fk_SendingUserId, fk_ReceivingUserId from DirectMessages where (fk_SendingUserId = ? or fk_ReceivingUserId = ?) and fk_OrganizationId = ?",
       [req.session.user.id, req.session.user.id, organizationId]
     )
   )
 
-  const chatPartnersWithDuplicates = chats.map(chat => chat.fk_SendingUserId === req.session.user.id ? fk_ReceivingUserId : fk_SendingUserId)
+  const chatPartnersWithDuplicates = chats.map(chat => chat.fk_SendingUserId === req.session.user.id ? chat.fk_ReceivingUserId : chat.fk_SendingUserId)
   const chatPartnerIds = []
-  chatPartnersWithDuplicates.forEach(chatPartner => !chatPartners.includes(chatPartner) && chatPartnerIds.push(chatPartner))
+  chatPartnersWithDuplicates.forEach(chatPartner => !chatPartnerIds.includes(chatPartner) && chatPartnerIds.push(chatPartner))
 
   const chatPartnersPlaceholders = chatPartnerIds.map(() => "?").join(",")
-  const chatPartnersQuery = `select userId, username from users where userId = (${chatPartnersPlaceholders})`
+  const chatPartnersQuery = `select userId, username from Users where userId = (${chatPartnersPlaceholders})`
 
-  const chatPartners = await safeOperation(
+  const [chatPartners] = await safeOperation(
     () => db.query(chatPartnersQuery, chatPartnerIds),
     "Error while retrieving chatpartners"
   )
