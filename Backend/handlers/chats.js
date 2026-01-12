@@ -3,6 +3,7 @@ import { safeOperation, safeOperations, checkReq } from '../error-handling.js'
 
 export async function sendMessage(req, res) {
 	const {receivingUserId, organizationId, message} = req.body
+  checkReq(!receivingUserId || !organizationId || !message)
 
   if (receivingUserId === req.session.user.id) return res.status(400).json({success: false, message: "Cannot message self"})
 
@@ -28,13 +29,14 @@ export async function sendMessage(req, res) {
 }
 
 export async function getChat(req, res) {
-  const {chatPartnerId} = req.query
+  const {chatPartnerId, organizationId} = req.query
+  checkReq(!chatPartnerId || !organizationId)
 
   const [chatMessages] = await safeOperation(
     () => db.query(`
       select directMessageId as messageId, content as message, fk_SendingUserId as sendingUser from DirectMessages 
-      where fk_SendingUserId in (?,?) and fk_ReceivingUserId in (?,?)`,
-      [req.session.user.id, chatPartnerId, req.session.user.id, chatPartnerId]
+      where fk_SendingUserId in (?,?) and fk_ReceivingUserId in (?,?) and fk_OrganizationId = ?`,
+      [req.session.user.id, chatPartnerId, req.session.user.id, chatPartnerId, organizationId]
     ),
     "Error while retrieving chat messages from database"
   )
@@ -44,6 +46,7 @@ export async function getChat(req, res) {
 
 export async function getAllChats(req, res) {
   const {organizationId} = req.query
+  checkReq(!organizationId)
 
   const [chats] = await safeOperation(
     () => db.query(

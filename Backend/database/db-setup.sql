@@ -7,8 +7,9 @@ CREATE TABLE Users(
 
 CREATE TABLE Organizations(
   organizationId INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  `name` VARCHAR(50) UNIQUE,
-  `description` TEXT
+  `name` VARCHAR(50),
+  `description` TEXT,
+  joinUUID CHAR(36)
 );
 
 CREATE TABLE OrganizationUsers(
