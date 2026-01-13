@@ -7,7 +7,7 @@ export async function sendMessage(req, res) {
 
   if (receivingUserId === req.session.user.id) return res.status(400).json({success: false, message: "Cannot message self"})
 
-  const organizationUserQuery = "select organizationUserId from OrganizationUsers where fk_UserId = ? and fk_OrganizationId = ?"
+  const organizationUserQuery = "select organizationUserId from organization_users where fk_UserId = ? and fk_OrganizationId = ?"
 
   const [[sendingOrganizationUser], [receivingOrganizationUser]] = await safeOperations([
     () => db.query(organizationUserQuery, [req.session.user.id, organizationId]),
@@ -19,7 +19,7 @@ export async function sendMessage(req, res) {
 
   await safeOperation(
     () => db.query(
-      "insert into DirectMessages (content, fk_OrganizationId, fk_SendingUserId, fk_ReceivingUserId) values (?,?,?,?)",
+      "insert into direct_messages (content, fk_OrganizationId, fk_SendingUserId, fk_ReceivingUserId) values (?,?,?,?)",
       [message, organizationId, req.session.user.id, receivingUserId]
     ),
     "Error while inserting message into the database"
@@ -34,7 +34,7 @@ export async function getChat(req, res) {
 
   const [chatMessages] = await safeOperation(
     () => db.query(`
-      select directMessageId as messageId, content as message, fk_SendingUserId as sendingUser from DirectMessages 
+      select directMessageId as messageId, content as message, fk_SendingUserId as sendingUser from direct_messages 
       where fk_SendingUserId in (?,?) and fk_ReceivingUserId in (?,?) and fk_OrganizationId = ?
       order by directMessageId asc`,
       [req.session.user.id, chatPartnerId, req.session.user.id, chatPartnerId, organizationId]
@@ -51,7 +51,7 @@ export async function getAllChats(req, res) {
 
   const [chats] = await safeOperation(
     () => db.query(
-      "select fk_SendingUserId, fk_ReceivingUserId from DirectMessages where (fk_SendingUserId = ? or fk_ReceivingUserId = ?) and fk_OrganizationId = ?",
+      "select fk_SendingUserId, fk_ReceivingUserId from direct_messages where (fk_SendingUserId = ? or fk_ReceivingUserId = ?) and fk_OrganizationId = ?",
       [req.session.user.id, req.session.user.id, organizationId]
     )
   )
@@ -61,7 +61,7 @@ export async function getAllChats(req, res) {
   chatPartnersWithDuplicates.forEach(chatPartner => !chatPartnerIds.includes(chatPartner) && chatPartnerIds.push(chatPartner))
 
   const chatPartnersPlaceholders = chatPartnerIds.map(() => "?").join(",")
-  const chatPartnersQuery = `select userId, username from Users where userId = (${chatPartnersPlaceholders})`
+  const chatPartnersQuery = `select userId, username from users where userId = (${chatPartnersPlaceholders})`
 
   const [chatPartners] = await safeOperation(
     () => db.query(chatPartnersQuery, chatPartnerIds),
