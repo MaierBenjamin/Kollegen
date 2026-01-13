@@ -5,7 +5,7 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 const searchtext = ref("")
 const isSearchActive = ref(false)
-const searchWrapper = ref(null) // 👈 hier der Wrapper Ref
+const searchWrapper = ref(null) 
 
 function startChat(user) {
   console.log("Starte Chat mit:", user)

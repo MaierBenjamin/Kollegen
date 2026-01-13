@@ -76,6 +76,12 @@ function uploadFile(event) {
     <div class="tabs">
       <h2 :class="{ active: activeTab === 'chat' }" @click="activeTab = 'chat'">Chat</h2>
       <h2 :class="{ active: activeTab === 'files' }" @click="activeTab = 'files'">Dateien</h2>
+      <img
+        class="plus-icon"
+        src="@/assets/settings.svg"
+        alt="Plus"
+        @click="$router.push('/group-settings')"        
+        />
     </div>
   </div>
 
@@ -178,6 +184,7 @@ body, html, #app {
   gap: 1.5rem;
   background-color: var(--background2);
   padding: 1rem 2rem;
+  cursor: pointer;
 }
 
 .settings-icon {
@@ -288,7 +295,10 @@ body, html, #app {
 
 .messageContent {
   font-size: 17px;
+  word-break: break-word;     
+  white-space: pre-wrap;        
 }
+
 
 .message-input {
   margin-top: 12px;

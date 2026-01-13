@@ -41,7 +41,7 @@ function sendMessage() {
   messages.value.push({
     id: newId,
     userId: user.id,
-    userName: user.name,
+    userName: user.username,
     content: newMessage.value,
     timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   })
@@ -72,19 +72,15 @@ function sendMessage() {
         <div v-for="msg in messages" :key="msg.id" :class="msg.userId === user.id ? 'own-message' : 'other-message'">
           <div class="messageInfo">
             <div class="sender">{{ msg.userName }}</div>
-            <div class="messageDate">{{ msg.timestamp }}</div>
           </div>
           <div class="messageContent">{{ msg.content }}</div>
         </div>
       </div>
 
-      <div class="form-group">
-        <input
-          v-model="newMessage"
-          placeholder="Schreibe eine Nachricht..."
-          @keyup.enter="sendMessage"
-        />
-      </div>
+      <div class="message-input">
+          <input type="text" v-model="newMessage" placeholder="Schreibe eine Nachricht..." @keyup.enter="sendMessage" />
+          <button @click="sendMessage">Senden</button>
+        </div>
     </div>
   </div>
 </template>
@@ -165,6 +161,8 @@ function sendMessage() {
 
 .messageContent {
   font-size: 17px;
+  word-break: break-word;       
+  white-space: pre-wrap;      
 }
 
 /* Textfeld */
@@ -181,5 +179,30 @@ function sendMessage() {
   font-size: 16px;
   background: #f3f3f3;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.message-input {
+  margin-top: 12px;
+  display: flex;
+  gap: 6px;
+}
+
+.message-input input {
+  flex: 1;
+  padding: 14px 18px;
+  border-radius: 20px;
+  border: none;
+  font-size: 16px;
+  background: #f3f3f3;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.message-input button {
+  padding: 14px 20px;
+  border-radius: 20px;
+  border: none;
+  background-color: #e2e3ff;
+  cursor: pointer;
+  font-weight: bold;
 }
 </style>

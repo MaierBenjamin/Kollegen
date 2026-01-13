@@ -1,24 +1,19 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
+
+import JoinOrganisationView from "./JoinOrganisationView.vue";
 
 const router = useRouter();
 
-const channels = ref<string[]>([]);
-const newChannel = ref<string>("");
+const users = ref([
+  { id: 1, username: "Janik" },
+  { id: 2, username: "Pascal" },
+  { id: 3, username: "Benjamin" },
+  { id: 4, username: "Julian" },
+])
 
-function addChannel() {
-  const name = newChannel.value.trim();
-  if (!name) return;
-  if (channels.value.includes(name)) return;
 
-  channels.value.push(name);
-  newChannel.value = "";
-}
-
-function removeChannel(index: number) {
-  channels.value.splice(index, 1);
-}
 </script>
 
 <template>
@@ -26,56 +21,29 @@ function removeChannel(index: number) {
     <aside class="sidebar">
       <div class="nav-item active">
         <img class="icon" src="@/assets/settings.svg" />
-        <span>Allgemein</span>
+        <span>Neue Organisation</span>
       </div>
 
-      <div class="nav-item" @click="router.push('/neu_rollen')">
+      <div class="nav-item" @click="router.push('/join-org')">
         <img class="icon" src="@/assets/members.svg" />
-        <span>Rollen</span>
+        <span>Organisation beitreten</span>
       </div>
     </aside>
 
     <main class="content">
-      <h2>Allgemein</h2>
+      <h2>Neue Organisation</h2>
 
       <div class="form-group">
-        <label>Mannschaftsname</label>
-        <input class="text-input" placeholder="Name der Mannschaft" />
+        <label>Organisationsname</label>
+        <input class="text-input" placeholder="Name der Organisation" />
       </div>
+
 
       <div class="form-group">
-        <label>Kanäle</label>
 
-        <div class="channels-inline">
-          <div
-            class="channel-chip"
-            v-for="(c, i) in channels"
-            :key="i"
-          >
-            <span>{{ c }}</span>
-            <img
-              v-if="c !== 'Allgemein'"
-              class="remove-btn"
-              src="@/assets/x.svg"
-              @click="removeChannel(i)"
-            />
-          </div>
+</div>
 
-          <input
-            class="channel-input"
-            v-model="newChannel"
-            placeholder="Neuer Kanalname (z.B. News)"
-            @keydown.enter.prevent="addChannel"
-          />
-
-          <img
-            class="plus-icon"
-            src="@/assets/circle-plus.svg"
-            @click="addChannel"
-          />
-        </div>
-      </div>
-
+          
       <button>Speichern</button>
     </main>
   </div>

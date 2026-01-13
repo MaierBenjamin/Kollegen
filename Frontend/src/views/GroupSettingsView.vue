@@ -4,16 +4,28 @@ import { useRouter } from "vue-router";
 
 const router = useRouter();
 
-const channels = ref<string[]>([]);
+
+const groupName = "name"
+
+const channels = ref([
+  { channelName: "Allgemein" },
+  { channelName: "Kanal 2" },
+  { channelName: "Kanal 3" },
+  { channelName: "Allgemein 3" },
+])
+
+  
 const newChannel = ref<string>("");
 
 function addChannel() {
-  const name = newChannel.value.trim();
-  if (!name) return;
-  if (channels.value.includes(name)) return;
+  const name = newChannel.value.trim()
+  if (!name) return
 
-  channels.value.push(name);
-  newChannel.value = "";
+  const exists = channels.value.some(c => c.channelName === name)
+  if (exists) return
+
+  channels.value.push({ channelName: name })
+  newChannel.value = ""
 }
 
 function removeChannel(index: number) {
@@ -40,7 +52,7 @@ function removeChannel(index: number) {
 
       <div class="form-group">
         <label>Mannschaftsname</label>
-        <input class="text-input" placeholder="Name der Mannschaft" />
+        <input class="text-input" v-model="groupName" placeholder="Name der Mannschaft" />
       </div>
 
       <div class="form-group">
@@ -52,9 +64,8 @@ function removeChannel(index: number) {
             v-for="(c, i) in channels"
             :key="i"
           >
-            <span>{{ c }}</span>
+            <span>{{ c.channelName }}</span>
             <img
-              v-if="c !== 'Allgemein'"
               class="remove-btn"
               src="@/assets/x.svg"
               @click="removeChannel(i)"

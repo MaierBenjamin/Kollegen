@@ -18,13 +18,19 @@ const groups = ["Gruppe 1", "Gruppe 2", "Gruppe 3", "Gruppe 4", "Gruppe 5", "Gru
       @click="$router.push('/group-view')"
     >
       <h2>{{ group }}</h2>
-    </div>
+   <img
+      class="plus-icon"
+      src="@/assets/ellipsis.svg"  
+      alt="Plus"
+      @click="$router.push('/new-group')"
+    />    
+  </div>
   </div>
 </template>
 
 <style scoped>
 .home-view {
-  position: relative;   /* wichtig für plus-icon */
+  position: relative;   
   width: 100%;
   height: 100%;
   display: flex;

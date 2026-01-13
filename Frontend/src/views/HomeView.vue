@@ -1,5 +1,5 @@
 <script setup>
-const groups = ["Schule", "Arbeit"];
+const groups = ["Gruppe 1", "Gruppe 2", "Gruppe 3", "Gruppe 4", "Gruppe 5", "Gruppe 6", "Gruppe 7", "Gruppe 8", "Gruppe 9", "Gruppe 10"];
 </script>
 
 <template>
@@ -15,9 +15,10 @@ const groups = ["Schule", "Arbeit"];
       class="gruppen-card"
       v-for="group in groups"
       :key="group"
-      @click="$router.push('/all-groups')"
+      @click="$router.push('/group-view')"
     >
       <h2>{{ group }}</h2>
+
     </div>
   </div>
 </template>

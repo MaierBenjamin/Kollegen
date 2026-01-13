@@ -12,6 +12,10 @@ import GroupView from '@/views/GroupView.vue'
 import DirectMessageView from '@/views/DirectMessageView.vue'
 
 import AllGroupsView from '@/views/AllGroupsView.vue'
+
+import NewOrganisationView from '@/views/new_org/NewOrganisationView.vue'
+import JoinOrganisationView from '@/views/new_org/JoinOrganisationView.vue'
+import GroupSettingsView from '@/views/GroupSettingsView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -26,6 +30,9 @@ const router = createRouter({
         { path: "group-view", name: "group-view", component: GroupView },
         { path: "direct-message", name: "direct-message", component: DirectMessageView },
         { path: "all-groups", name: "all-groups", component: AllGroupsView },
+        { path: "new-org", name: "new-org", component: NewOrganisationView },
+        { path: "join-org", name: "join-org", component: JoinOrganisationView },
+        { path: "group-settings", name: "group-settings", component: GroupSettingsView },
 
       ],
     },
