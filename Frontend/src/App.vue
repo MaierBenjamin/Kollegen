@@ -1,11 +1,29 @@
-<script setup></script>
+<script setup>
+import { RouterView } from 'vue-router';
+
+</script>
 
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
-</template>
+  <div class="router-wrapper"><RouterView /></div>
 
-<style scoped></style>
+</template>
+<style scoped>
+.body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--background);
+  font-family: inherit;
+  height: 100%; 
+  width: 100%;
+}
+
+.router-wrapper {
+  overflow-y: auto;
+  max-height: 100%;
+}
+
+#app {
+  padding-top: 600px; /* Platz für Navbar */
+  box-sizing: border-box; /* damit Padding nicht die Größe kaputt macht */
+}
+</style>
