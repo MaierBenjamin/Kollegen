@@ -50,7 +50,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "22" # Passend zu deiner lokalen Node-Version
+          node-version: "22"
           cache: "npm"
           cache-dependency-path: "./Backend/package-lock.json"
 
@@ -85,11 +85,11 @@ jobs:
           NODE_ENV: test
 
       - name: Run Integration Tests
-        # Startet Jest und prüft deine auth.test.js
+        # Startet Jest und prüft auth.test.js
         run: npm test
         env:
           DB_HOST: 127.0.0.1
           DB_USER: root
-          DB_PASSWORD: testpassword # Wichtig: Nutzt jetzt PASSWORD statt PASS
+          DB_PASSWORD: testpassword
           DB_NAME: kollegen_test_db
           NODE_ENV: test
