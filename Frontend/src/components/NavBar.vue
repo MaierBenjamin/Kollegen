@@ -67,14 +67,12 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="top-bar">
-    <!-- Logo oben links -->
     <div class="logo">
       <router-link to="/">
         <img src="@/assets/handshake.svg" alt="Logo" />
       </router-link>
     </div>
 
-    <!-- Suchfeld zentriert -->
     <div class="search-wrapper">
       <input
         v-model="searchtext"
@@ -95,7 +93,6 @@ onBeforeUnmount(() => {
       </div>
     </div>
 
-    <!-- Profilbild rechts -->
     <div class="profilpicture"
          :style="{ backgroundColor: pfpColor }"
          @click="onPFPClick">
