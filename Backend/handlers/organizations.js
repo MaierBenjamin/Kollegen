@@ -7,7 +7,7 @@ export async function getOrganization(req, res) {
 
   const [[organization]] = await safeOperation(
     () => db.query(
-      "select organizationId, name, description, joinUUID from Organizations where organizationId = ?", 
+      "select organizationId, name, description, joinUUID from organizations where organizationId = ?", 
       [organizationId]
     ),
     "Error while retrieving organization from database"
@@ -16,7 +16,7 @@ export async function getOrganization(req, res) {
   if (!organization) return res.status(404).json({success: false, message: "Organization not found"})
 
   const [[organizationUser]] = await safeOperation(
-    () => db.query("select userRole from OrganizationUsers where fk_UserId = ? and fk_OrganizationId = ?", [req.session.user.id, organizationId]),
+    () => db.query("select userRole from organization_users where fk_UserId = ? and fk_OrganizationId = ?", [req.session.user.id, organizationId]),
     "Error while retrieving organization user from database"
   )
 
@@ -30,14 +30,14 @@ export async function getUsers(req, res) {
   checkReq(!organizationId)
 
   const [[organization]] = await safeOperation(
-    () => db.query("select organizationId from Organizations where organizationId = ?", [organizationId]),
+    () => db.query("select organizationId from organizations where organizationId = ?", [organizationId]),
     "Error while retrieving organization from database"
   )
   
   if (!organization) return res.status(404).json({success: false, message: "Organization not found"})
 
   const [[organizationUser]] = await safeOperation(
-    () => db.query("select userRole from OrganizationUsers where fk_UserId = ? and fk_OrganizationId = ?", [req.session.user.id, organizationId]),
+    () => db.query("select userRole from organization_users where fk_UserId = ? and fk_OrganizationId = ?", [req.session.user.id, organizationId]),
     "Error while retrieving organization user from database"
   )
 
@@ -45,8 +45,8 @@ export async function getUsers(req, res) {
   
   const [users] = await safeOperation(
     () => db.query(
-      `select userId, username, email, userRole from OrganizationUsers
-      join Users on fk_UserId = userId
+      `select userId, username, email, userRole from organization_users
+      join users on fk_UserId = userId
       where fk_OrganizationId = ?`,
       [organizationId]
     ),
@@ -62,14 +62,14 @@ export async function createOrganization(req, res) {
 
   const [result] = await safeOperation(
     () => db.query(
-      "insert into Organizations (name, description, joinUUID) values (?,?,?)", 
+      "insert into organizations (name, description, joinUUID) values (?,?,?)", 
       [name, description || "", crypto.randomUUID()]),
     "Error while inserting organization into database"
   )
 
   await safeOperation(
     () => db.query(
-      "insert into OrganizationUsers (userRole, fk_UserId, fk_OrganizationId) values (?,?,?)",
+      "insert into organization_users (userRole, fk_UserId, fk_OrganizationId) values (?,?,?)",
       ["owner", req.session.user.id, result.insertId]
     ),
     "Error while inserting organization owner"
@@ -83,14 +83,14 @@ export async function deleteOrganization(req, res) {
   checkReq(!organizationId)
 
   const [[organization]] = await safeOperation(
-    () => db.query("select organizationId from Organizations where organizationId = ?", [organizationId]),
+    () => db.query("select organizationId from organizations where organizationId = ?", [organizationId]),
     "Error while retrieving organization from database"
   )
   
   if (!organization) return res.status(404).json({success: false, message: "Organization not found"})
 
   const [[organizationUser]] = await safeOperation(
-    () => db.query("select userRole from OrganizationUsers where fk_UserId = ? and fk_OrganizationId = ?", [req.session.user.id, organizationId]),
+    () => db.query("select userRole from organization_users where fk_UserId = ? and fk_OrganizationId = ?", [req.session.user.id, organizationId]),
     "Error while retrieving organization user from database"
   )
 
@@ -98,7 +98,7 @@ export async function deleteOrganization(req, res) {
   if (organizationUser.userRole !== "owner") return res.status(403).json({success: false, message: "Only the owner of an organization is allowed to delete it"})
 
   await safeOperation(
-    () => db.query("delete from Organizations where organizationId = ?", [organizationId]),
+    () => db.query("delete from organizations where organizationId = ?", [organizationId]),
     "Error while deleting organization"
   )
 
@@ -110,14 +110,14 @@ export async function editOrganization(req, res) {
   checkReq(!organizationId)
 
   const [[organization]] = await safeOperation(
-    () => db.query("select organizationId from Organizations where organizationId = ?", [organizationId]),
+    () => db.query("select organizationId from organizations where organizationId = ?", [organizationId]),
     "Error while retrieving organization from database"
   )
   
   if (!organization) return res.status(404).json({success: false, message: "Organization not found"})
 
   const [[organizationUser]] = await safeOperation(
-    () => db.query("select userRole from OrganizationUsers where fk_UserId = ? and fk_OrganizationId = ?", [req.session.user.id, organizationId]),
+    () => db.query("select userRole from organization_users where fk_UserId = ? and fk_OrganizationId = ?", [req.session.user.id, organizationId]),
     "Error while retrieving organization user from database"
   )
 
@@ -126,8 +126,8 @@ export async function editOrganization(req, res) {
 
   await safeOperation(
     async () => {
-      if (organizationName) await db.query("update Organizations set name = ? where organizationId = ?", [organizationName, organizationId])
-      if (organizationDescription) await db.query("update Organizations set description = ? where organizationId = ?", [organizationDescription, organizationId])
+      if (organizationName) await db.query("update organizations set name = ? where organizationId = ?", [organizationName, organizationId])
+      if (organizationDescription) await db.query("update organizations set description = ? where organizationId = ?", [organizationDescription, organizationId])
     },
     "Error while updating the organization"
   )
@@ -140,14 +140,14 @@ export async function toggleAdmin(req, res) {
   checkReq(!organizationId)
 
   const [[organization]] = await safeOperation(
-    () => db.query("select organizationId from Organizations where organizationId = ?", [organizationId]),
+    () => db.query("select organizationId from organizations where organizationId = ?", [organizationId]),
     "Error while retrieving organization from database"
   )
   
   if (!organization) return res.status(404).json({success: false, message: "Organization not found"})
 
   const [[organizationUser]] = await safeOperation(
-    () => db.query("select userRole from OrganizationUsers where fk_UserId = ? and fk_OrganizationId = ?", [req.session.user.id, organizationId]),
+    () => db.query("select userRole from organization_users where fk_UserId = ? and fk_OrganizationId = ?", [req.session.user.id, organizationId]),
     "Error while retrieving organization user from database"
   )
 
@@ -155,7 +155,7 @@ export async function toggleAdmin(req, res) {
   if (organizationUser.userRole !== "owner") return res.status(403).json({success: false, message: "Only the owner of an organization is allowed change user roles of members"})
 
   const [[userToChange]] = await safeOperation(
-    () => db.query("select userRole from OrganizationUsers where fk_UserId = ? and fk_OrganizationId = ?", [userToChangeId, organizationId]),
+    () => db.query("select userRole from organization_users where fk_UserId = ? and fk_OrganizationId = ?", [userToChangeId, organizationId]),
     "Error while retrieving the updating user from database"
   )
 
@@ -164,7 +164,7 @@ export async function toggleAdmin(req, res) {
   
   await safeOperation(
     () => db.query(
-      "update OrganizationUsers set userRole = ? where fk_OrganizationId = ? and fk_UserId = ?", 
+      "update organization_users set userRole = ? where fk_OrganizationId = ? and fk_UserId = ?", 
       [userToChange.userRole === "user" ? "admin" : "user", organizationId, userToChangeId]
     ),
     "Error while updating user role"
@@ -178,21 +178,21 @@ export async function joinOrganization(req, res) {
   checkReq(!joinId)
 
   const [[organization]] = await safeOperation(
-    () => db.query("select organizationId from Organizations where joinUUID = ?", [joinId]),
+    () => db.query("select organizationId from organizations where joinUUID = ?", [joinId]),
     "Error while retrieving organization from database"
   )
   
   if (!organization) return res.status(404).json({success: false, message: "Organization not found"})
 
   const [[organizationUser]] = await safeOperation(
-    () => db.query("select userRole from OrganizationUsers where fk_UserId = ? and fk_OrganizationId = ?", [req.session.user.id, organization.organizationId]),
+    () => db.query("select userRole from organization_users where fk_UserId = ? and fk_OrganizationId = ?", [req.session.user.id, organization.organizationId]),
     "Error while retrieving organization user from database"
   )
 
   if (organizationUser) return res.status(409).json({success: false, message: "User already in organization"})
   
   await safeOperation(
-    () => db.query("insert into OrganizationUsers (userRole, fk_UserId, fk_OrganizationId) values (?,?,?)", ["user", req.session.user.id, organization.organizationId]),
+    () => db.query("insert into organization_users (userRole, fk_UserId, fk_OrganizationId) values (?,?,?)", ["user", req.session.user.id, organization.organizationId]),
     "Error while inserting organization user into database"
   )
 
@@ -204,14 +204,14 @@ export async function leaveOrganization(req, res) {
   checkReq(!organizationId)
 
   const [[organization]] = await safeOperation(
-    () => db.query("select organizationId from Organizations where organizationId = ?", [organizationId]),
+    () => db.query("select organizationId from organizations where organizationId = ?", [organizationId]),
     "Error while retrieving organization from database"
   )
   
   if (!organization) return res.status(404).json({success: false, message: "Organization not found"})
 
   const [[organizationUser]] = await safeOperation(
-    () => db.query("select userRole from OrganizationUsers where fk_UserId = ? and fk_OrganizationId = ?", [req.session.user.id, organizationId]),
+    () => db.query("select userRole from organization_users where fk_UserId = ? and fk_OrganizationId = ?", [req.session.user.id, organizationId]),
     "Error while retrieving organization user from database"
   )
 
@@ -219,7 +219,7 @@ export async function leaveOrganization(req, res) {
   if (organizationUser.userRole === "owner") return res.status(403).json({success: false, message: "The owner of an organization can't leave it"})
 
   await safeOperation(
-    () => db.query("delete from OrganizationUsers where fk_UserId = ? and fk_OrganizationId = ?", [req.session.user.id, organizationId]),
+    () => db.query("delete from organization_users where fk_UserId = ? and fk_OrganizationId = ?", [req.session.user.id, organizationId]),
     "Error while deleting organization user from database"
   )
 

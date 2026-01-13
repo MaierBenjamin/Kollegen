@@ -2,51 +2,44 @@ name: Kollegen Deployment Pipeline
 
 on:
   push:
-    branches:
-      - main
-      - testing
+    branches: ["main", "testing", "Dev", "Backend"] # Deckt alle deine Arbeitsbereiche ab
   pull_request:
-    branches:
-      - main
+    branches: ["main"]
 
 jobs:
-  # JOB 1: Build and Test
-  build-and-test:
+  # 1. Job: Prüft, ob das Frontend fehlerfrei baut
+  frontend-build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: "./Frontend/package-lock.json"
+      - run: npm ci
+      - run: npm run build
 
-      - name: Build Frontend (Vue)
-        run: |
-          cd Frontend
-          npm install
-          npm run build
-
-      - name: Test Backend (Node)
-        run: |
-          cd Backend
-          npm install
-          # npm test # Uncomment this when you have tests defined
-
-      - name: Upload Frontend Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: frontend-dist
-          path: Frontend/dist/
-          retention-days: 1
-
-  # JOB 2: Deploy (Only if Job 1 succeeds AND branch is main)
-  deploy:
-    needs: build-and-test
-    if: github.ref == 'refs/heads/main'
+  # 2. Job: Führt die Backend-Integrationstests aus
+  backend-test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./Backend
+    services:
+      # Startet eine echte MariaDB in der GitHub-Cloud
+      mariadb:
+        image: mariadb:10.11
+        env:
+          MYSQL_ROOT_PASSWORD: testpassword
+          MYSQL_DATABASE: kollegen_test_db
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
     steps:
       - name: Download Frontend Build Artifact
         uses: actions/download-artifact@v4
@@ -57,25 +50,50 @@ jobs:
       - name: Checkout Repository (for Backend files)
         uses: actions/checkout@v4
 
-      - name: Setup SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: "./Backend/package-lock.json"
 
       - name: Deploy Frontend Files
         run: |
           rsync -avz --delete dist/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/kollegen-frontend/
 
-      - name: Deploy Backend Files
+      - name: Wait for MariaDB to be ready
         run: |
-          rsync -avz --delete --exclude 'node_modules' Backend/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/kollegen-backend/
+          for i in {1..10}; do
+            if mysqladmin ping -h 127.0.0.1 -u root --password=testpassword --silent; then
+              echo "✅ MariaDB ist bereit"
+              exit 0
+            fi
+            echo "⏳ Warte auf MariaDB..."
+            sleep 2
+          done
+          exit 1
 
-      - name: Restart Backend Service
+      - name: Initialize Database (Tables)
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
-            cd /var/www/kollegen-backend && 
-            npm install --production &&
-            pm2 restart kollegen || pm2 start src/server.js --name kollegen
-          "
+          echo "Initialisiere Tabellen in kollegen_test_db..."
+          # Wir erzwingen die Nutzung der richtigen DB direkt im Befehl
+          mysql -h 127.0.0.1 -u root -ptestpassword -D kollegen_test_db < src/database/schema.sql
+          
+          echo "Kontrolle: Vorhandene Tabellen:"
+          mysql -h 127.0.0.1 -u root -ptestpassword -D kollegen_test_db -e "SHOW TABLES;"
+        env:
+          DB_HOST: 127.0.0.1
+          DB_USER: root
+          DB_PASSWORD: testpassword
+          DB_NAME: kollegen_test_db
+          NODE_ENV: test
+
+      - name: Run Integration Tests
+        # Startet Jest und prüft auth.test.js
+        run: npm test
+        env:
+          DB_HOST: 127.0.0.1
+          DB_USER: root
+          DB_PASSWORD: testpassword
+          DB_NAME: kollegen_test_db
+          NODE_ENV: test

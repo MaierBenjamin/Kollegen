@@ -1,0 +1,92 @@
+name: Kollegen CI/CD Pipeline
+
+on:
+  push:
+    branches: ["main", "testing", "Dev", "Backend"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  # 1. JOB: FRONTEND BAUEN
+  frontend-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Build Vue
+        run: |
+          cd Frontend
+          npm ci
+          npm run build
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: Frontend/dist/
+
+  # 2. JOB: BACKEND TESTEN (MIT MARIADB)
+  backend-test:
+    runs-on: ubuntu-latest
+    services:
+      mariadb:
+        image: mariadb:10.11
+        env:
+          MYSQL_ROOT_PASSWORD: testpassword
+          MYSQL_DATABASE: kollegen_test_db
+        ports: ["3306:3306"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Run Tests
+        run: |
+          cd Backend
+          npm ci
+          # Initialisiert die Test-Datenbank mit deinem Schema
+          mysql -h 127.0.0.1 -u root -ptestpassword -D kollegen_test_db < src/database/schema.sql
+          npm test
+        env:
+          DB_HOST: 127.0.0.1
+          DB_USER: root
+          DB_PASSWORD: testpassword
+          DB_NAME: kollegen_test_db
+          NODE_ENV: test
+
+  # 3. JOB: DEPLOYMENT (NUR WENN TESTS BESTANDEN UND BRANCH = MAIN)
+  deploy:
+    needs: [frontend-build, backend-test]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download Frontend Build
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-dist
+          path: dist-temp
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Sync Files to Server
+        run: |
+          # Frontend Dateien in den Zielordner schieben
+          rsync -avz --delete dist-temp/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/Kollegen/Frontend/
+          
+          # Backend Dateien schieben (ohne node_modules und tests)
+          rsync -avz --delete --exclude 'node_modules' --exclude 'tests' Backend/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/Kollegen/Backend/
+
+      - name: Production Restart
+        run: |
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
+            cd /var/www/Kollegen/Backend && 
+            npm install --production &&
+            pm2 restart kollegen || pm2 start server.js --name kollegen
+          "

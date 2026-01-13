@@ -7,9 +7,8 @@ CREATE TABLE users(
 
 CREATE TABLE organizations(
   organizationId INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  `name` VARCHAR(50),
-  `description` TEXT,
-  joinUUID CHAR(36)
+  `name` VARCHAR(50) UNIQUE,
+  `description` TEXT
 );
 
 CREATE TABLE organization_users(
@@ -59,10 +58,8 @@ CREATE TABLE channel_messages(
 CREATE TABLE direct_messages(
   directMessageId INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   content TEXT,
-  fk_OrganizationId INT UNSIGNED,
   fk_SendingUserId INT UNSIGNED NULL,
   fk_ReceivingUserId INT UNSIGNED NULL,
-  FOREIGN KEY (fk_OrganizationId) REFERENCES organizations(organizationId) ON DELETE CASCADE,
   FOREIGN KEY (fk_SendingUserId) REFERENCES users(userId) ON DELETE SET NULL,
   FOREIGN KEY (fk_ReceivingUserId) REFERENCES users(userId) ON DELETE SET NULL
 );
