@@ -6,9 +6,10 @@ export async function register(req, res) {
   const {username, email, password} = req.body
   checkReq(!username || !email || !password)
 
+  // Tabellenname zu 'users' geändert
   const [[dbUsername], [dbEmail]] = await safeOperations([
-    () => db.query("select * from Users where username = ?", [username]),
-    () => db.query("select * from Users where email = ?", [email])
+    () => db.query("select * from users where username = ?", [username]),
+    () => db.query("select * from users where email = ?", [email])
   ], "Error while fetching username")
 
   if (dbUsername.length !== 0) return res.status(400).json({success: false, message: "Username is taken"})
@@ -16,8 +17,9 @@ export async function register(req, res) {
 
   const hashedpassword = await bcrypt.hash(password, 10)
 
+  // Tabellenname zu 'users' geändert
   await safeOperation(
-    () => db.query("insert into Users (username, email, password) values (?,?,?)", [username, email, hashedpassword]),
+    () => db.query("insert into users (username, email, password) values (?,?,?)", [username, email, hashedpassword]),
     "Error while registering"
   )
 
@@ -30,10 +32,11 @@ export async function login(req, res) {
 
   const [[dbUser]] = await safeOperation(
     async () => {
+      // Tabellenname zu 'users' geändert
       if (username) {
-        return await db.query("select * from Users where username = ?", [username])
+        return await db.query("select * from users where username = ?", [username])
       } else {
-        return await db.query("select * from Users where email = ?", [email])
+        return await db.query("select * from users where email = ?", [email])
       }
     }, 
     "Error while fetching user from the database"
@@ -63,8 +66,9 @@ export async function checkLogin(req, res) {
 }
 
 export async function getUserdata(req, res) {
+  // Tabellenname zu 'users' geändert
   const [[user]] = await safeOperation( 
-    () => db.query("select userId, username, email from Users where userId = ?", [req.session.user.id]),
+    () => db.query("select userId, username, email from users where userId = ?", [req.session.user.id]),
     "Error while retrieving userdata from the database"
   )
   
@@ -75,18 +79,20 @@ export async function editUserdata(req, res) {
   const {username, email} = req.body
   checkReq(!username && !email)
 
+  // Tabellenname zu 'users' geändert
   const [[dbUsername], [dbEmail]] = await safeOperations([
-    () => db.query("select * from Users where username = ?", [username]),
-    () => db.query("select * from Users where email = ?", [email])
+    () => db.query("select * from users where username = ?", [username]),
+    () => db.query("select * from users where email = ?", [email])
   ], "Error while fetching username")
 
   if (dbUsername.length !== 0) return res.status(400).json({success: false, message: "Username is taken"})
   if (dbEmail.length !== 0) return res.status(400).json({success: false, message: "E-Mail is taken"})
 
+  // Tabellenname zu 'users' geändert
   await safeOperation(
     async () => {
-      if (username) await db.query("update Users set username = ? where userId = ?", [username, req.session.user.id])
-      if (email) await db.query("update Users set email = ? where userId = ?", [email, req.session.user.id])
+      if (username) await db.query("update users set username = ? where userId = ?", [username, req.session.user.id])
+      if (email) await db.query("update users set email = ? where userId = ?", [email, req.session.user.id])
     },
     "Error while updating userdata"
   )
@@ -95,8 +101,9 @@ export async function editUserdata(req, res) {
 }
 
 export async function deleteUser(req, res) {
+  // Tabellenname zu 'users' geändert
   await safeOperation(
-    () => db.query("delete from Users where userId = ?", [req.session.user.id]),
+    () => db.query("delete from users where userId = ?", [req.session.user.id]),
     "Error while deleting user"
   )
 

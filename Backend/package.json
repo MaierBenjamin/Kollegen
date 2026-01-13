@@ -4,18 +4,20 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "test": "npx nodemon"
+    "test": "cross-env NODE_ENV=test node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --forceExit",
+    "db:init-test": "cross-env NODE_ENV=test node database/db.js",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/julianamschwand/Kollegen.git"
+    "url": "git+https://github.com/BenjaminMaier/Kollegen.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/julianamschwand/Kollegen/issues"
+    "url": "https://github.com/BenjaminMaier/Kollegen/issues"
   },
-  "homepage": "https://github.com/julianamschwand/Kollegen#readme",
+  "homepage": "https://github.com/BenjaminMaier/Kollegen#readme",
   "description": "",
   "dependencies": {
     "bcrypt": "^6.0.0",
@@ -28,5 +30,9 @@
     "jest": "^30.2.0",
     "mysql2": "^3.15.3",
     "nodemon": "^3.1.10"
+  },
+  "devDependencies": {
+    "cross-env": "^10.1.0",
+    "supertest": "^7.2.2"
   }
 }

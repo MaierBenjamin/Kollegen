@@ -16,18 +16,16 @@ import SideBar from "@/components/SideBar.vue"
 </script>
 
 <style scoped>
-/* Gesamt-Layout */
 .layout {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  overflow: hidden; /* verhindert Body-Scroll */
+  overflow: hidden; 
 }
 
-/* Main Content */
 .main-content {
-  margin-top: 70px;      /* Höhe Top-Bar */
-  margin-left: 90px;     /* Breite Sidebar */
+  margin-top: 70px;      
+  margin-left: 90px;     
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -36,7 +34,6 @@ import SideBar from "@/components/SideBar.vue"
   padding: 20px;
 }
 
-/* Router-View Scrollbereich */
 /* .router-wrapper {
   flex: 1;
   overflow-y: auto;
