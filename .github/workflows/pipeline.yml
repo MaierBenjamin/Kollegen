@@ -15,27 +15,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
-      - name: Debug and Build
+      - name: Build Vue
         run: |
-          echo "Aktuelles Verzeichnis:"
-          pwd
-          echo "Inhalt des Hauptverzeichnisses:"
-          ls -F
-          
-          # Versuche in den Ordner zu wechseln (mit Fehler-Abfang)
-          cd Frontend || cd frontend || echo "Ordner nicht gefunden!"
-          
-          echo "Inhalt des Frontend-Ordners:"
-          ls -F
-          
-          # Prüfen ob package-lock da ist, sonst normales install
-          if [ -f package-lock.json ]; then
-            npm ci
-          else
-            echo "WARNUNG: Keine package-lock.json gefunden! Nutze npm install..."
-            npm install
-          fi
-          
+          cd Frontend
+          # Wir nutzen install statt ci, falls die lock-Datei fehlt
+          npm install 
           npm run build
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
