@@ -1,5 +1,5 @@
 import { db } from '../database/db.js'
-import { safeOperation, safeOperations, checkReq } from '../error-handling.js'
+import { safeOperation, checkReq } from '../error-handling.js'
 
 export async function getOrganization(req, res) {
   const {organizationId} = req.body
@@ -174,7 +174,7 @@ export async function toggleAdmin(req, res) {
 }
 
 export async function joinOrganization(req, res) {
-  const {joinId} = req.query
+  const {joinId} = req.body
   checkReq(!joinId)
 
   const [[organization]] = await safeOperation(
