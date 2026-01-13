@@ -1,0 +1,227 @@
+import { db } from '../database/db.js'
+import { safeOperation, safeOperations, checkReq } from '../error-handling.js'
+
+export async function getOrganization(req, res) {
+  const {organizationId} = req.body
+  checkReq(!organizationId)
+
+  const [[organization]] = await safeOperation(
+    () => db.query(
+      "select organizationId, name, description, joinUUID from Organizations where organizationId = ?", 
+      [organizationId]
+    ),
+    "Error while retrieving organization from database"
+  )
+  
+  if (!organization) return res.status(404).json({success: false, message: "Organization not found"})
+
+  const [[organizationUser]] = await safeOperation(
+    () => db.query("select userRole from OrganizationUsers where fk_UserId = ? and fk_OrganizationId = ?", [req.session.user.id, organizationId]),
+    "Error while retrieving organization user from database"
+  )
+
+  if (!organizationUser) return res.status(404).json({success: false, message: "User not in organization"})
+  
+  res.status(200).json({success: true, message: "Successfully retrieved organization from database", organization})
+} 
+
+export async function getUsers(req, res) {
+  const {organizationId} = req.body
+  checkReq(!organizationId)
+
+  const [[organization]] = await safeOperation(
+    () => db.query("select organizationId from Organizations where organizationId = ?", [organizationId]),
+    "Error while retrieving organization from database"
+  )
+  
+  if (!organization) return res.status(404).json({success: false, message: "Organization not found"})
+
+  const [[organizationUser]] = await safeOperation(
+    () => db.query("select userRole from OrganizationUsers where fk_UserId = ? and fk_OrganizationId = ?", [req.session.user.id, organizationId]),
+    "Error while retrieving organization user from database"
+  )
+
+  if (!organizationUser) return res.status(404).json({success: false, message: "User not in organization"})
+  
+  const [users] = await safeOperation(
+    () => db.query(
+      `select userId, username, email, userRole from OrganizationUsers
+      join Users on fk_UserId = userId
+      where fk_OrganizationId = ?`,
+      [organizationId]
+    ),
+    "Error while retrieving organization users from database"
+  )
+
+  res.status(200).json({success: true, message: "Successfully retrieved organization users from database", users})
+}
+
+export async function createOrganization(req, res) {
+  const {name, description} = req.body
+  checkReq(!name)
+
+  const [result] = await safeOperation(
+    () => db.query(
+      "insert into Organizations (name, description, joinUUID) values (?,?,?)", 
+      [name, description || "", crypto.randomUUID()]),
+    "Error while inserting organization into database"
+  )
+
+  await safeOperation(
+    () => db.query(
+      "insert into OrganizationUsers (userRole, fk_UserId, fk_OrganizationId) values (?,?,?)",
+      ["owner", req.session.user.id, result.insertId]
+    ),
+    "Error while inserting organization owner"
+  )
+
+  res.status(201).json({success: true, message: "Successfully created organization"})
+}
+
+export async function deleteOrganization(req, res) {
+  const {organizationId} = req.body
+  checkReq(!organizationId)
+
+  const [[organization]] = await safeOperation(
+    () => db.query("select organizationId from Organizations where organizationId = ?", [organizationId]),
+    "Error while retrieving organization from database"
+  )
+  
+  if (!organization) return res.status(404).json({success: false, message: "Organization not found"})
+
+  const [[organizationUser]] = await safeOperation(
+    () => db.query("select userRole from OrganizationUsers where fk_UserId = ? and fk_OrganizationId = ?", [req.session.user.id, organizationId]),
+    "Error while retrieving organization user from database"
+  )
+
+  if (!organizationUser) return res.status(404).json({success: false, message: "User not in organization"})
+  if (organizationUser.userRole !== "owner") return res.status(403).json({success: false, message: "Only the owner of an organization is allowed to delete it"})
+
+  await safeOperation(
+    () => db.query("delete from Organizations where organizationId = ?", [organizationId]),
+    "Error while deleting organization"
+  )
+
+  res.status(200).json({success: true, message: "Successfully deleted organization"})
+}
+
+export async function editOrganization(req, res) {
+  const {organizationId, organizationName, organizationDescription} = req.body
+  checkReq(!organizationId)
+
+  const [[organization]] = await safeOperation(
+    () => db.query("select organizationId from Organizations where organizationId = ?", [organizationId]),
+    "Error while retrieving organization from database"
+  )
+  
+  if (!organization) return res.status(404).json({success: false, message: "Organization not found"})
+
+  const [[organizationUser]] = await safeOperation(
+    () => db.query("select userRole from OrganizationUsers where fk_UserId = ? and fk_OrganizationId = ?", [req.session.user.id, organizationId]),
+    "Error while retrieving organization user from database"
+  )
+
+  if (!organizationUser) return res.status(404).json({success: false, message: "User not in organization"})
+  if (organizationUser.userRole !== "owner") return res.status(403).json({success: false, message: "Only the owner of an organization is allowed to edit it"})
+
+  await safeOperation(
+    async () => {
+      if (organizationName) await db.query("update Organizations set name = ? where organizationId = ?", [organizationName, organizationId])
+      if (organizationDescription) await db.query("update Organizations set description = ? where organizationId = ?", [organizationDescription, organizationId])
+    },
+    "Error while updating the organization"
+  )
+
+  res.status(200).json({success: true, message: "Successfully edited organization"})
+}
+
+export async function toggleAdmin(req, res) {
+  const {organizationId, userToChangeId} = req.body
+  checkReq(!organizationId)
+
+  const [[organization]] = await safeOperation(
+    () => db.query("select organizationId from Organizations where organizationId = ?", [organizationId]),
+    "Error while retrieving organization from database"
+  )
+  
+  if (!organization) return res.status(404).json({success: false, message: "Organization not found"})
+
+  const [[organizationUser]] = await safeOperation(
+    () => db.query("select userRole from OrganizationUsers where fk_UserId = ? and fk_OrganizationId = ?", [req.session.user.id, organizationId]),
+    "Error while retrieving organization user from database"
+  )
+
+  if (!organizationUser) return res.status(404).json({success: false, message: "Requesting user not in organization"})
+  if (organizationUser.userRole !== "owner") return res.status(403).json({success: false, message: "Only the owner of an organization is allowed change user roles of members"})
+
+  const [[userToChange]] = await safeOperation(
+    () => db.query("select userRole from OrganizationUsers where fk_UserId = ? and fk_OrganizationId = ?", [userToChangeId, organizationId]),
+    "Error while retrieving the updating user from database"
+  )
+
+  if (!userToChange) return res.status(404).json({success: false, message: "Requesting user not in organization or doesn't exist"})
+  if (userToChange.userRole === "owner") return res.status(403).json({success: false, message: "The owner of an organization must stay owner"})
+  
+  await safeOperation(
+    () => db.query(
+      "update OrganizationUsers set userRole = ? where fk_OrganizationId = ? and fk_UserId = ?", 
+      [userToChange.userRole === "user" ? "admin" : "user", organizationId, userToChangeId]
+    ),
+    "Error while updating user role"
+  )
+
+  res.status(200).json({success: true, message: "Successfully toggled admin on user"})
+}
+
+export async function joinOrganization(req, res) {
+  const {joinId} = req.query
+  checkReq(!joinId)
+
+  const [[organization]] = await safeOperation(
+    () => db.query("select organizationId from Organizations where joinUUID = ?", [joinId]),
+    "Error while retrieving organization from database"
+  )
+  
+  if (!organization) return res.status(404).json({success: false, message: "Organization not found"})
+
+  const [[organizationUser]] = await safeOperation(
+    () => db.query("select userRole from OrganizationUsers where fk_UserId = ? and fk_OrganizationId = ?", [req.session.user.id, organization.organizationId]),
+    "Error while retrieving organization user from database"
+  )
+
+  if (organizationUser) return res.status(409).json({success: false, message: "User already in organization"})
+  
+  await safeOperation(
+    () => db.query("insert into OrganizationUsers (userRole, fk_UserId, fk_OrganizationId) values (?,?,?)", ["user", req.session.user.id, organization.organizationId]),
+    "Error while inserting organization user into database"
+  )
+
+  res.status(200).json({success: true, message: "Successfully joined organization"})
+}
+
+export async function leaveOrganization(req, res) {
+  const {organizationId} = req.body
+  checkReq(!organizationId)
+
+  const [[organization]] = await safeOperation(
+    () => db.query("select organizationId from Organizations where organizationId = ?", [organizationId]),
+    "Error while retrieving organization from database"
+  )
+  
+  if (!organization) return res.status(404).json({success: false, message: "Organization not found"})
+
+  const [[organizationUser]] = await safeOperation(
+    () => db.query("select userRole from OrganizationUsers where fk_UserId = ? and fk_OrganizationId = ?", [req.session.user.id, organizationId]),
+    "Error while retrieving organization user from database"
+  )
+
+  if (!organizationUser) return res.status(404).json({success: false, message: "User not in organization"})
+  if (organizationUser.userRole === "owner") return res.status(403).json({success: false, message: "The owner of an organization can't leave it"})
+
+  await safeOperation(
+    () => db.query("delete from OrganizationUsers where fk_UserId = ? and fk_OrganizationId = ?", [req.session.user.id, organizationId]),
+    "Error while deleting organization user from database"
+  )
+
+  res.status(200).json({success: true, message: "Successfully left organization"})
+}
