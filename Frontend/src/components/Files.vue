@@ -27,7 +27,7 @@ function download(file) {
 </script>
 
 <template>
-  <div>
+  <div class="files">
     <div v-if="files.length">
       <div v-for="file in files" :key="file.id">
         {{ file.name }} <button @click="download(file)">Download</button>
@@ -36,3 +36,4 @@ function download(file) {
     <div v-else>Keine Dateien in diesem Channel.</div>
   </div>
 </template>
+

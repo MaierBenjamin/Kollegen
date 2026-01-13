@@ -109,10 +109,11 @@ function uploadFile(event) {
             <div class="messageContent">{{ msg.content }}</div>
           </div>
         </div>
-
-        <div class="message-input">
-          <input type="text" v-model="newMessage" placeholder="Schreibe eine Nachricht..." @keyup.enter="sendMessage" />
-          <button @click="sendMessage">Senden</button>
+        <div class="message-field">
+          <div class="message-input">
+            <input type="text" v-model="newMessage" placeholder="Schreibe eine Nachricht..." @keyup.enter="sendMessage" />
+            <button @click="sendMessage">Senden</button>
+          </div>
         </div>
       </div>
 
@@ -218,7 +219,7 @@ body, html, #app {
   flex: 1; 
   background: #fff;
   padding: 1rem;
-  
+  justify-content: flex-end;
 }
 .main-wrapper {
   display: flex;
@@ -251,7 +252,6 @@ body, html, #app {
   padding: 1rem;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
 }
 
 .chat-container {
@@ -323,5 +323,14 @@ body, html, #app {
   background-color: #e2e3ff;
   cursor: pointer;
   font-weight: bold;
+}
+
+.message-field{
+  flex: 1;
+  background: #fff;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  
 }
 </style>

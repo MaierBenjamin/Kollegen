@@ -28,6 +28,11 @@ const users = ref([
         <img class="icon" src="@/assets/members.svg" />
         <span>Organisation beitreten</span>
       </div>
+
+      <div class="nav-item" @click="router.push('/manage-org')">
+        <img class="icon" src="@/assets/members.svg" />
+        <span>Organisationen verwalten</span>
+      </div>
     </aside>
 
     <main class="content">

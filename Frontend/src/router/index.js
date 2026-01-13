@@ -16,6 +16,7 @@ import AllGroupsView from '@/views/AllGroupsView.vue'
 import NewOrganisationView from '@/views/new_org/NewOrganisationView.vue'
 import JoinOrganisationView from '@/views/new_org/JoinOrganisationView.vue'
 import GroupSettingsView from '@/views/GroupSettingsView.vue'
+import ManageOrganisationView from '@/views/new_org/ManageOrganisationView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -33,6 +34,7 @@ const router = createRouter({
         { path: "new-org", name: "new-org", component: NewOrganisationView },
         { path: "join-org", name: "join-org", component: JoinOrganisationView },
         { path: "group-settings", name: "group-settings", component: GroupSettingsView },
+        { path: "manage-org", name: "manage-org", component: ManageOrganisationView },
 
       ],
     },

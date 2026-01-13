@@ -1,61 +1,87 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
-const router = useRouter();
+const groups = ref([
+  { id: 1, name: 'Org 1' },
+  { id: 2, name: 'Org 2' },
+  { id: 3, name: 'Org 3' },
+])
 
-const roles = ref<string[]>(["@member"]);
-const newRole = ref<string>("");
+
+const members = ref([
+  { id: 1, name: 'Janik', role: "owner" },
+  { id: 2, name: 'Pascal', role: "member"},
+  { id: 3, name: 'Benjamin', role: "member"},
+])
+
+const router = useRouter()
+
+const roles = ref<string[]>(['@member'])
+const newRole = ref<string>('')
 
 function addRole() {
-  const name = newRole.value.trim();
-  if (!name) return;
-  if (roles.value.includes(name)) return;
+  const name = newRole.value.trim()
+  if (!name) return
+  if (roles.value.includes(name)) return
 
-  roles.value.push(name);
-  newRole.value = "";
+  roles.value.push(name)
+  newRole.value = ''
 }
 
 function removeRole(index: number) {
-  if (roles.value[index] === "@member") return;
-  roles.value.splice(index, 1);
+  if (roles.value[index] === '@member') return
+  roles.value.splice(index, 1)
 }
+
+const activeTab = ref('chooseOrg')
 </script>
 
 <template>
   <div class="page">
-        <aside class="sidebar">
+    <aside class="sidebar">
       <div class="nav-item" @click="router.push('/new-org')">
         <img class="icon" src="@/assets/settings.svg" />
         <span>Neue Organisation</span>
       </div>
 
-      <div class="nav-item active">
+      <div class="nav-item" @click="router.push('/join-org')">
         <img class="icon" src="@/assets/members.svg" />
         <span>Organisation beitreten</span>
       </div>
 
-      <div class="nav-item" @click="router.push('/manage-org')">
+      <div class="nav-item active">
         <img class="icon" src="@/assets/members.svg" />
         <span>Organisationen verwalten</span>
       </div>
     </aside>
 
- <main class="content">
-      <h2>Organisation beitreten</h2>
+    <main class="content">
+      <h2>Organisationen verwalten</h2>
 
-      <div class="form-group">
-        <label>Organisationsbeitrittscode</label>
-        <input class="text-input" placeholder="Beitrittscode der Organisation" />
+      <div v-if="activeTab === 'chooseOrg'">
+        <div
+          class="gruppen-card"
+          v-for="group in groups"
+          :key="group.id"
+          @click="activeTab = 'manageMembers'"
+        >
+          <h2>{{ group.name }}</h2>
+        </div>
       </div>
 
+      <div v-if="activeTab === 'manageMembers'">
+        <div
+          class="gruppen-card"
+          v-for="member in members"
+          :key="member.id"
+        >
+          <h2>{{ member.name }}</h2>
+        </div>
+      </div>
 
-      <div class="form-group">
+      <div class="form-group"></div>
 
-</div>
-
-          
-      <button>Beitreten</button>
     </main>
   </div>
 </template>
@@ -65,6 +91,21 @@ function removeRole(index: number) {
   height: 100vh;
   display: flex;
   background-color: #e2e3ff;
+}
+
+.gruppen-card {
+  background: #e7e7ff;
+  border-radius: 20px;
+
+  width: min(700px, 70%);
+  padding: 28px 40px;
+  margin-bottom: 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border: 2px solid black;
 }
 
 .form-group {
@@ -162,7 +203,7 @@ h2 {
   padding: 12px 18px;
   border-radius: 20px;
   background: #f3f3f3;
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.15);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
   font-size: 16px;
   white-space: nowrap;
 }
@@ -176,7 +217,7 @@ h2 {
   border: none;
   background: #f3f3f3;
   font-size: 16px;
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.15);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
 .plus-icon,
@@ -279,9 +320,9 @@ h2 {
 }
 
 .role-input {
-  flex: 1;            /* nimmt restlichen Platz */
-  min-width: 280px;   /* verhindert mini-input */
-  width: auto;        /* wichtig: nicht 100% */
+  flex: 1; /* nimmt restlichen Platz */
+  min-width: 280px; /* verhindert mini-input */
+  width: auto; /* wichtig: nicht 100% */
   padding: 12px 18px;
   border-radius: 20px;
   border: none;

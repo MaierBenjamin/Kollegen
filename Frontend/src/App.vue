@@ -13,7 +13,17 @@ import { RouterView } from 'vue-router';
   padding: 0;
   background-color: var(--background);
   font-family: inherit;
-  height: 100%;
+  height: 100%; 
   width: 100%;
+}
+
+.router-wrapper {
+  overflow-y: auto;
+  max-height: 100%;
+}
+
+#app {
+  padding-top: 600px; /* Platz für Navbar */
+  box-sizing: border-box; /* damit Padding nicht die Größe kaputt macht */
 }
 </style>

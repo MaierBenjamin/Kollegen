@@ -87,105 +87,54 @@ function selectOption(org) {
   font-family: Arial, Helvetica, sans-serif;
   width: 400px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 30px;
   background: white;
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
-.page-wrapper {
-  min-height: 100vh;
+.input-field label { display: block; margin-bottom: 8px; font-size: 16px; } .input-field input { width: 100%; padding: 14px 18px; border-radius: 20px; border: none; background: #f3f3f3; font-size: 16px; box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15); }
+
+.organisations {
   display: flex;
-  justify-content: center;
   align-items: center;
-  margin: 0 auto;
-}
-
-.h1 {
-  font-family: Arial, Helvetica, sans-serif;
-  text-align: center;
-}
-
-.plus-icon {
-  top: 24px;
-  right: 24px;
-  width: 48px;
-  height: 48px;
-  cursor: pointer;
-}
-
-.profilpicture img {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.profilpicture {
-  background: none;
-  border: none;
-}
-
-.profilpicture-content {
-  padding-top: 20px;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  padding-bottom: 30px;
-  align-items: center;
-}
-
-.input-field {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-}
-
-.input-field label {
-  display: block;
-  margin-bottom: 8px;
-  font-size: 16px;
-}
-
-.input-field input {
-  width: 100%;
-  padding: 14px 18px;
-  border-radius: 20px;
-  border: none;
-  background: #f3f3f3;
-  font-size: 16px;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
-}
-
-.button {
-  margin-top: 20px;
-  color: white;
-  background-color: var(--background);
-  border: none;
-  border-radius: 12px;
-  padding: 8px 16px;
-  cursor: pointer;
-  height: 40px;
-  transition: all 0.3s ease;
-}
-
-.button:hover {
-  filter: brightness(0.9);
+  gap: 12px; 
+  margin-bottom: 20px;
 }
 
 .dropdown-btn {
-  border: none;
-  background: none;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 10px 16px;
+  background: #f3f3f3;
   cursor: pointer;
 }
 
 .dropdown-list {
+  margin-top: 4px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  background: white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  list-style: none;
+  padding: 8px 0;
+}
+
+.dropdown-list div {
+  padding: 8px 16px;
   cursor: pointer;
 }
 
-.organisations {
-  display: flex;
-  flex-direction: row;
-  gap: 150px;
+.dropdown-list div:hover {
+  background: #e5e5e5;
 }
+
+.plus-icon {
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}
+
+
+.button { margin-top: 20px; color: white; background-color: var(--background); border: none; border-radius: 12px; padding: 8px 16px; cursor: pointer; height: 40px; transition: all 0.3s ease; } .button:hover { filter: brightness(0.9); }
 </style>
