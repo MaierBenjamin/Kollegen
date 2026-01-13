@@ -62,7 +62,7 @@ CREATE TABLE direct_messages(
   fk_OrganizationId INT UNSIGNED,
   fk_SendingUserId INT UNSIGNED NULL,
   fk_ReceivingUserId INT UNSIGNED NULL,
-  FOREIGN KEY (fk_OrganizationId) REFERENCES (organizationId) ON DELETE CASCADE,
+  FOREIGN KEY (fk_OrganizationId) REFERENCES organizations(organizationId) ON DELETE CASCADE,
   FOREIGN KEY (fk_SendingUserId) REFERENCES users(userId) ON DELETE SET NULL,
   FOREIGN KEY (fk_ReceivingUserId) REFERENCES users(userId) ON DELETE SET NULL
 );
