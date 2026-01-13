@@ -2,7 +2,7 @@ import { db } from '../database/db.js'
 import { safeOperation, safeOperations, checkReq } from '../error-handling.js'
 
 export async function getGroups(req, res) {
-  const {organizationId} = req.body
+  const {organizationId} = req.query
   checkReq(!organizationId)
 
   const [[organization]] = await safeOperation(
@@ -20,15 +20,16 @@ export async function getGroups(req, res) {
   if (!organizationUser) return res.status(404).json({success: false, message: "User not in organization"})
 
   const [groups] = await safeOperation(
-    () => db.query("select groupId, name from Groups where fk_OrganizaationId = ?", [organizationId]),
+    () => db.query("select groupId, name from Groups where fk_OrganizationId = ?", [organizationId]),
     "Error while retrieving groups from database"
   )
 
-  res.status(200).json({success: false, message: "Successfully retrieved groups from database", groups})
+  res.status(200).json({success: true, message: "Successfully retrieved groups from database", groups})
 }
 
 export async function getGroup(req, res) {
   const {groupId} = req.query
+  checkReq(!groupId)
 
   const [[group]] = await safeOperation(
     () => db.query("select name, fk_OrganizationId from Groups where groupId = ?", [groupId]),
@@ -143,15 +144,20 @@ export async function getChannelMessages(req, res) {
   const {channelId} = req.query
   checkReq(!channelId)
 
-  const [[group]] = await safeOperation(
-    () => db.query("select fk_OrganizationId from Groups where groupId = ?", [groupId]),
+  const [[channel]] = await safeOperation(
+    () => db.query(
+      `select fk_OrganizationId from GroupChannels 
+      join Groups on groupId = fk_GroupId
+      where groupChannelId = ?`, 
+      [channelId]
+    ),
     "Error while retrieving group from database"
   )
   
-  if (!group) return res.status(404).json({success: false, message: "Group not found"})
+  if (!channel) return res.status(404).json({success: false, message: "Channel not found"})
 
   const [[organizationUser]] = await safeOperation(
-    () => db.query("select userRole from OrganizationUsers where fk_UserId = ? and fk_OrganizationId = ?", [req.session.user.id, group.fk_OrganizationId]),
+    () => db.query("select userRole from OrganizationUsers where fk_UserId = ? and fk_OrganizationId = ?", [req.session.user.id, channel.fk_OrganizationId]),
     "Error while retrieving organization user from database"
   )
 
@@ -169,15 +175,20 @@ export async function sendChannelMessage(req, res) {
   const {channelId, message} = req.body
   checkReq(!channelId || !message)
 
-  const [[group]] = await safeOperation(
-    () => db.query("select fk_OrganizationId from Groups where groupId = ?", [groupId]),
+  const [[channel]] = await safeOperation(
+    () => db.query(
+      `select fk_OrganizationId from GroupChannels 
+      join Groups on groupId = fk_GroupId
+      where groupChannelId = ?`, 
+      [channelId]
+    ),
     "Error while retrieving group from database"
   )
   
-  if (!group) return res.status(404).json({success: false, message: "Group not found"})
+  if (!channel) return res.status(404).json({success: false, message: "Channel not found"})
 
   const [[organizationUser]] = await safeOperation(
-    () => db.query("select userRole from OrganizationUsers where fk_UserId = ? and fk_OrganizationId = ?", [req.session.user.id, group.fk_OrganizationId]),
+    () => db.query("select userRole from OrganizationUsers where fk_UserId = ? and fk_OrganizationId = ?", [req.session.user.id, channel.fk_OrganizationId]),
     "Error while retrieving organization user from database"
   )
 
@@ -211,7 +222,7 @@ export async function createChannel(req, res) {
   if (!["admin","owner"].includes(organizationUser.userRole)) return res.status(403).json({success: false, message: "Only admins and the owner of an organization can add channels to groups"})
 
   await safeOperation(
-    () => db.query("insert into GroupChannels (name, gk_GroupId) values (?,?)", [channelName, groupId]),
+    () => db.query("insert into GroupChannels (name, fk_GroupId) values (?,?)", [channelName, groupId]),
     "Error while inserting new channel into database"
   )
 
@@ -219,18 +230,23 @@ export async function createChannel(req, res) {
 }
 
 export async function deleteChannel(req, res) {
-  const {channelId} = req.query
+  const {channelId} = req.body
   checkReq(!channelId)
 
-  const [[group]] = await safeOperation(
-    () => db.query("select fk_OrganizationId from Groups where groupId = ?", [groupId]),
+  const [[channel]] = await safeOperation(
+    () => db.query(
+      `select fk_OrganizationId from GroupChannels 
+      join Groups on groupId = fk_GroupId
+      where groupChannelId = ?`, 
+      [channelId]
+    ),
     "Error while retrieving group from database"
   )
   
-  if (!group) return res.status(404).json({success: false, message: "Group not found"})
+  if (!channel) return res.status(404).json({success: false, message: "Channel not found"})
 
   const [[organizationUser]] = await safeOperation(
-    () => db.query("select userRole from OrganizationUsers where fk_UserId = ? and fk_OrganizationId = ?", [req.session.user.id, group.fk_OrganizationId]),
+    () => db.query("select userRole from OrganizationUsers where fk_UserId = ? and fk_OrganizationId = ?", [req.session.user.id, channel.fk_OrganizationId]),
     "Error while retrieving organization user from database"
   )
 
@@ -238,7 +254,7 @@ export async function deleteChannel(req, res) {
   if (!["admin","owner"].includes(organizationUser.userRole)) return res.status(403).json({success: false, message: "Only admins and the owner of an organization can delete channels"})
 
   await safeOperation(
-    () => db.query("delete from GroupChannels where fk_GroupChannelId = ?", [channelId]),
+    () => db.query("delete from GroupChannels where groupChannelId = ?", [channelId]),
     "Error while deleting channel from database"
   )
 
