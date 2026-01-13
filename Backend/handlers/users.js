@@ -6,7 +6,6 @@ export async function register(req, res) {
   const {username, email, password} = req.body
   checkReq(!username || !email || !password)
 
-  // Tabellenname zu 'users' geändert
   const [[dbUsername], [dbEmail]] = await safeOperations([
     () => db.query("select * from users where username = ?", [username]),
     () => db.query("select * from users where email = ?", [email])
@@ -17,7 +16,6 @@ export async function register(req, res) {
 
   const hashedpassword = await bcrypt.hash(password, 10)
 
-  // Tabellenname zu 'users' geändert
   await safeOperation(
     () => db.query("insert into users (username, email, password) values (?,?,?)", [username, email, hashedpassword]),
     "Error while registering"
@@ -32,7 +30,6 @@ export async function login(req, res) {
 
   const [[dbUser]] = await safeOperation(
     async () => {
-      // Tabellenname zu 'users' geändert
       if (username) {
         return await db.query("select * from users where username = ?", [username])
       } else {
@@ -66,7 +63,6 @@ export async function checkLogin(req, res) {
 }
 
 export async function getUserdata(req, res) {
-  // Tabellenname zu 'users' geändert
   const [[user]] = await safeOperation( 
     () => db.query("select userId, username, email from users where userId = ?", [req.session.user.id]),
     "Error while retrieving userdata from the database"
@@ -79,7 +75,6 @@ export async function editUserdata(req, res) {
   const {username, email} = req.body
   checkReq(!username && !email)
 
-  // Tabellenname zu 'users' geändert
   const [[dbUsername], [dbEmail]] = await safeOperations([
     () => db.query("select * from users where username = ?", [username]),
     () => db.query("select * from users where email = ?", [email])
@@ -88,7 +83,6 @@ export async function editUserdata(req, res) {
   if (dbUsername.length !== 0) return res.status(400).json({success: false, message: "Username is taken"})
   if (dbEmail.length !== 0) return res.status(400).json({success: false, message: "E-Mail is taken"})
 
-  // Tabellenname zu 'users' geändert
   await safeOperation(
     async () => {
       if (username) await db.query("update users set username = ? where userId = ?", [username, req.session.user.id])
@@ -101,7 +95,6 @@ export async function editUserdata(req, res) {
 }
 
 export async function deleteUser(req, res) {
-  // Tabellenname zu 'users' geändert
   await safeOperation(
     () => db.query("delete from users where userId = ?", [req.session.user.id]),
     "Error while deleting user"
