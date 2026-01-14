@@ -43,7 +43,7 @@ Die Anwendung nutzt ein hierarchisches Layout-System:
 | `src/tests/` | Automatisierte Unit- und Integrationstests. |
 | `server.js` | Einstiegspunkt der Anwendung und Server-Konfiguration. |
 
-## 4. Setup & Entwicklung
+### 4. Setup & Entwicklung
 Um das Backend lokal für die Entwicklung vorzubereiten:
 
 1.  **Abhängigkeiten:** `npm install`
