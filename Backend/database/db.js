@@ -13,7 +13,7 @@ const MySQLStore = connectMySQL(session)
 const dbOptions = {
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD, // Hier muss PASSWORD stehen, passend zur .env!
+  password: process.env.DB_PASS, // Hier muss PASSWORD stehen, passend zur .env!
   database: process.env.DB_NAME,
   connectionLimit: 20,
   enableKeepAlive: true,

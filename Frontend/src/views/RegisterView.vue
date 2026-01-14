@@ -62,6 +62,7 @@
 </template>
 
 <script setup>
+import { register } from "@/api/routes/users.js";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 
@@ -72,8 +73,9 @@ const password = ref("");
 const router = useRouter();
 
 const handleRegister = async () => {
+  const response = await register(username.value, email.value, password.value)
 
-  console.log("Register with:", username.value, email.value, password.value);
+  if (response.success) router.push("/login")
 };
 </script>
 

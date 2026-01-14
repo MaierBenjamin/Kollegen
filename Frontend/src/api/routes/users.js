@@ -1,11 +1,11 @@
 import request from '../request.js'
 
-export async function register() {
-  return request("post", "/register")
+export async function register(username, email, password) {
+  return request("post", "/register", { data: { username, email, password }})
 }
 
-export async function login() {
-  return request("post", "/login")
+export async function login(email, password) {
+  return request("post", "/login", { data: { email, password }})
 }
 
 export async function logout() {
@@ -20,8 +20,8 @@ export async function getUserdata() {
   return request("get", "/data")
 }
 
-export async function editUserdata() {
-  return request("patch", "/edit")
+export async function editUserdata(username, email) {
+  return request("patch", "/edit", { data: { username, email }})
 }
 
 export async function deleteUser() {

@@ -5,6 +5,7 @@ import * as organizationHandler from '../handlers/organizations.js'
 
 const organizationRouter = express.Router()
 
+organizationRouter.get("/", checkAuth, routeWrapper(organizationHandler.getOrganizations))
 organizationRouter.get("/single", checkAuth, routeWrapper(organizationHandler.getOrganization))
 organizationRouter.get("/users", checkAuth, routeWrapper(organizationHandler.getUsers))
 organizationRouter.post("/create", checkAuth, routeWrapper(organizationHandler.createOrganization))

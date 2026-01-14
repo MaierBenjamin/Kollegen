@@ -1,8 +1,22 @@
 import { db } from '../database/db.js'
 import { safeOperation, checkReq } from '../error-handling.js'
 
+export async function getOrganizations(req, res) {
+  const [organizations] = await safeOperation(
+    () => db.query(
+      `select organizationId, name from organization_users
+      join organizations on fk_OrganizationId = organizationId
+      where fk_UserId = ?`,
+      [req.session.user.id]
+    ),
+    "Error while retrieving organizations from database"
+  )
+
+  res.status(200).json({success: true, message: "Successfully retrieved organizations from database", organizations})
+}
+
 export async function getOrganization(req, res) {
-  const {organizationId} = req.body
+  const {organizationId} = req.query
   checkReq(!organizationId)
 
   const [[organization]] = await safeOperation(
@@ -26,7 +40,7 @@ export async function getOrganization(req, res) {
 } 
 
 export async function getUsers(req, res) {
-  const {organizationId} = req.body
+  const {organizationId} = req.query
   checkReq(!organizationId)
 
   const [[organization]] = await safeOperation(
