@@ -30,6 +30,7 @@ jobs:
   # 2. JOB: BACKEND TESTEN (MIT MARIADB)
   backend-test:
     runs-on: ubuntu-latest
+    environment: testing
     services:
       mariadb:
         image: mariadb:10.11
@@ -59,6 +60,7 @@ jobs:
     needs: [frontend-build, backend-test]
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    environment: deployment
     steps:
       - uses: actions/checkout@v4
       - name: Download Frontend Build
