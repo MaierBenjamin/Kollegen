@@ -80,6 +80,8 @@ jobs:
 
       - name: Sync Files to Server
         run: |          
+          # Frontend Dateien schieben
+          rsync -avz --delete dist-temp/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/Kollegen/Frontend/
           # Backend Dateien schieben (inkl. Schutz für .env Dateien)
           rsync -avz --delete \
             --exclude 'node_modules' \
