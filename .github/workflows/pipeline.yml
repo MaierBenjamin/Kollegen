@@ -18,7 +18,8 @@ jobs:
       - name: Build Vue
         run: |
           cd Frontend
-          npm ci
+          # Wir nutzen install statt ci, falls die lock-Datei fehlt
+          npm install 
           npm run build
       - name: Upload Artifact
         uses: actions/upload-artifact@v4

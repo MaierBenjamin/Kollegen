@@ -67,14 +67,12 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="top-bar">
-    <!-- Logo oben links -->
     <div class="logo">
       <router-link to="/">
         <img src="@/assets/handshake.svg" alt="Logo" />
       </router-link>
     </div>
 
-    <!-- Suchfeld zentriert -->
     <div class="search-wrapper">
       <input
         v-model="searchtext"
@@ -95,7 +93,6 @@ onBeforeUnmount(() => {
       </div>
     </div>
 
-    <!-- Profilbild rechts -->
     <div class="profilpicture"
          :style="{ backgroundColor: pfpColor }"
          @click="onPFPClick">
@@ -120,13 +117,11 @@ onBeforeUnmount(() => {
   box-sizing: border-box;
 }
 
-/* Logo links */
 .top-bar .logo img {
   width: 50px;
   height: 50px;
 }
 
-/* Suchfeld zentriert */
 .search-wrapper {
   flex: 1;
   display: flex;
@@ -143,6 +138,7 @@ onBeforeUnmount(() => {
   outline: none;
   font-size: 16px;
   box-shadow: inset 0 2px 4px rgba(0,0,0,0.15);
+  
 }
 
 .user-list-wrapper {
@@ -157,9 +153,9 @@ onBeforeUnmount(() => {
   padding: 12px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.15);
   z-index: 1001;
+  cursor: pointer;
 }
 
-/* Profilbild rechts */
 .profilpicture {
   width: 50px;
   height: 50px;
