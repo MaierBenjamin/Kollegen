@@ -21,6 +21,8 @@ jobs:
           # Wir nutzen install statt ci, falls die lock-Datei fehlt
           npm install 
           npm run build
+        env:
+          VITE_API_URL: https://kollegen.amschwand.com/api
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -30,12 +32,13 @@ jobs:
   # 2. JOB: BACKEND TESTEN (MIT MARIADB)
   backend-test:
     runs-on: ubuntu-latest
+    environment: testing
     services:
       mariadb:
         image: mariadb:10.11
         env:
-          MYSQL_ROOT_PASSWORD: testpassword
-          MYSQL_DATABASE: kollegen_test_db
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
         ports: ["3306:3306"]
     steps:
       - uses: actions/checkout@v4
@@ -46,21 +49,20 @@ jobs:
         run: |
           cd Backend
           npm ci
-          # Initialisiert die Test-Datenbank mit deinem Schema
-          mysql -h 127.0.0.1 -u root -ptestpassword -D kollegen_test_db < src/database/schema.sql
+          mysql -h 127.0.0.1 -u root -p"${{ secrets.MYSQL_ROOT_PASSWORD }}" -D ${{ secrets.MYSQL_DATABASE }} < src/database/schema.sql
           npm test
         env:
           DB_HOST: 127.0.0.1
           DB_USER: root
-          DB_PASSWORD: testpassword
-          DB_NAME: kollegen_test_db
+          DB_PASS: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          DB_NAME: ${{ secrets.MYSQL_DATABASE }}
           NODE_ENV: test
 
-  # 3. JOB: DEPLOYMENT (NUR WENN TESTS BESTANDEN UND BRANCH = MAIN)
   deploy:
     needs: [frontend-build, backend-test]
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    environment: deployment
     steps:
       - uses: actions/checkout@v4
       - name: Download Frontend Build
@@ -72,17 +74,18 @@ jobs:
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
       - name: Sync Files to Server
-        run: |
-          # Frontend Dateien in den Zielordner schieben
-          rsync -avz --delete dist-temp/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/Kollegen/Frontend/
-          
-          # Backend Dateien schieben (ohne node_modules und tests)
-          rsync -avz --delete --exclude 'node_modules' --exclude 'tests' Backend/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/Kollegen/Backend/
+        run: |          
+          # Backend Dateien schieben (inkl. Schutz für .env Dateien)
+          rsync -avz --delete \
+            --exclude 'node_modules' \
+            --exclude 'tests' \
+            --exclude '.env*' \
+            Backend/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/Kollegen/Backend/
 
       - name: Production Restart
         run: |
