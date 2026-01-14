@@ -46,17 +46,15 @@ jobs:
         run: |
           cd Backend
           npm ci
-          # Initialisiert die Test-Datenbank mit deinem Schema
-          mysql -h 127.0.0.1 -u root -ptestpassword -D kollegen_test_db < src/database/schema.sql
+          mysql -h 127.0.0.1 -u root -p"${{ secrets.MYSQL_ROOT_PASSWORD }}" -D ${{ secrets.MYSQL_DATABASE }} < src/database/schema.sql
           npm test
         env:
           DB_HOST: 127.0.0.1
           DB_USER: root
-          DB_PASSWORD: testpassword
-          DB_NAME: kollegen_test_db
+          DB_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          DB_NAME: ${{ secrets.MYSQL_DATABASE }}
           NODE_ENV: test
 
-  # 3. JOB: DEPLOYMENT (NUR WENN TESTS BESTANDEN UND BRANCH = MAIN)
   deploy:
     needs: [frontend-build, backend-test]
     if: github.ref == 'refs/heads/main'
