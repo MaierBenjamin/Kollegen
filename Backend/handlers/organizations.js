@@ -1,5 +1,6 @@
 import { db } from '../database/db.js'
 import { safeOperation, checkReq } from '../error-handling.js'
+import crypto from 'node:crypto'
 
 export async function getOrganizations(req, res) {
   const [organizations] = await safeOperation(
