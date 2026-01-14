@@ -52,13 +52,16 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { login } from "@/api/routes/users";
 
+const router = useRouter()
 const email = ref("");
 const password = ref("");
 
 const handleLogin = async () => {
+  const response = await login(email.value, password.value)
 
-  console.log("Login with:", email.value, password.value);
+  if (response.success) router.push("/")
 };
 </script>
 

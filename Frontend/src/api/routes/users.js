@@ -4,8 +4,8 @@ export async function register(username, email, password) {
   return request("post", "/register", { data: { username, email, password }})
 }
 
-export async function login(username, password) {
-  return request("post", "/login", { data: { username, password }})
+export async function login(email, password) {
+  return request("post", "/login", { data: { email, password }})
 }
 
 export async function logout() {
