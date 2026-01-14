@@ -79,12 +79,13 @@ jobs:
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
       - name: Sync Files to Server
-        run: |
-          # Frontend Dateien in den Zielordner schieben
-          rsync -avz --delete dist-temp/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/Kollegen/Frontend/
-          
-          # Backend Dateien schieben (ohne node_modules und tests)
-          rsync -avz --delete --exclude 'node_modules' --exclude 'tests' Backend/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/Kollegen/Backend/
+        run: |          
+          # Backend Dateien schieben (inkl. Schutz für .env Dateien)
+          rsync -avz --delete \
+            --exclude 'node_modules' \
+            --exclude 'tests' \
+            --exclude '.env*' \
+            Backend/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/Kollegen/Backend/
 
       - name: Production Restart
         run: |
