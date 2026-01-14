@@ -2,7 +2,7 @@ import { db } from '../database/db.js'
 import { safeOperation, checkReq } from '../error-handling.js'
 
 export async function getOrganization(req, res) {
-  const {organizationId} = req.body
+  const {organizationId} = req.query
   checkReq(!organizationId)
 
   const [[organization]] = await safeOperation(
@@ -26,7 +26,7 @@ export async function getOrganization(req, res) {
 } 
 
 export async function getUsers(req, res) {
-  const {organizationId} = req.body
+  const {organizationId} = req.query
   checkReq(!organizationId)
 
   const [[organization]] = await safeOperation(

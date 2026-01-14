@@ -1,25 +1,33 @@
 import request from "../request";
 
-export async function createOrganization(data) {
-  return request("post", "/create", data)
+export async function getUsers(organizationId) {
+  return request("get", "/organizations/users", { params: { organizationId }})
 }
 
-export async function deleteOrganization() {
-  return request("delete", "/delete")
+export async function getOrganization(organizationId) {
+  return request("get", "/organizations/single", { params: { organizationId }})
 }
 
-export async function editOrganization(data) {
-  return request("patch", "/edit", data)
+export async function createOrganization(name, description) {
+  return request("post", "/organizations/create", { data: { name, description }})
 }
 
-export async function changeUserRole(data) {
-  return request("patch", "/change-userrole", data)
+export async function deleteOrganization(organizationId) {
+  return request("delete", "/organizations/delete", { data: { organizationId }})
 }
 
-export async function joinOrganization(data) {
-  return request("post", "/join", data)
+export async function editOrganization(organizationId, organizationDescription) {
+  return request("patch", "/organizations/edit", { data: { organizationId, organizationDescription }})
 }
 
-export async function leaveOrganization() {
-  return request("delete", "/leave")
+export async function toggleAdmin(organizationId, userToChangeId) {
+  return request("patch", "/organizations/toggle-admin", { data: { organizationId, userToChangeId }})
+}
+
+export async function joinOrganization(joinId) {
+  return request("post", "/organizations/join", { data: { joinId }})
+}
+
+export async function leaveOrganization(organizationId) {
+  return request("delete", "/organizations/leave", { data: { organizationId }})
 }
