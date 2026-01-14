@@ -1,12 +1,11 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { logout, editUserdata } from '@/api/routes/users'
+import { logout, editUserdata, getUserdata } from '@/api/routes/users'
 
 const router = useRouter()
-const username = ref("Pascal123")
-const email = ref("pascal_buehler@sluz.ch")
-
+const username = ref("")
+const email = ref("")
 
 const organisations = ref([
   { id: 1, name: "Organisation 1" },
@@ -17,10 +16,10 @@ const organisations = ref([
 const selected = ref(JSON.parse(localStorage.getItem('currentOrgId'))?.name || "--- Select an organization ---")
 const isOpen = ref(false)
 
-function saveChanges() {
-  console.log("Saved values:")
-  console.log("Username:", username.value)
-  console.log("Email:", email.value)
+async function saveChanges() {
+  const response = await editUserdata(username.value, email.value)
+
+  if (response.success) router.push("/")
 }
 
 function toggleDropdown() {
@@ -38,6 +37,15 @@ async function handleLogout() {
   const response = await logout()
   if (response.success) router.push("/login")
 }
+
+onMounted(async () => {
+  const response = await getUserdata()
+
+  if (response.success) {
+    username.value = response.user.username
+    email.value = response.user.email
+  }
+})
 </script>
 
 <template>

@@ -76,8 +76,8 @@ export async function editUserdata(req, res) {
   checkReq(!username && !email)
 
   const [[dbUsername], [dbEmail]] = await safeOperations([
-    () => db.query("select * from users where username = ?", [username]),
-    () => db.query("select * from users where email = ?", [email])
+    () => db.query("select * from users where username = ? and userId != ?", [username, req.session.user.id]),
+    () => db.query("select * from users where email = ? and userId != ?", [email, req.session.user.id])
   ], "Error while fetching username")
 
   if (dbUsername.length !== 0) return res.status(400).json({success: false, message: "Username is taken"})
