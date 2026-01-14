@@ -11,27 +11,24 @@
 - Create organization
 - Delete organization
 - Edit organization
-- Change user roles in organization
+- Toggle admin role on organization users
 - Join organization
 - Leave organization
+- Get information about a single organization
+- Get the users of an organization
+- Get all organizations a user joined
 
 ## Groups
 - Get groups of organization
 - Create group
 - Delete group
 - Edit group
-- Join group
-- Leave group
 - Create channels
 - Delete channels
-- Edit channel names
 - Send message in channel
-- Upload files to channel
-- Download files from channel
-- Show all files from channel
+- Get all channel messages
 
 ## Chats
-- Create chat
 - Send chat message
 - Get chat messages
 - Get all chats

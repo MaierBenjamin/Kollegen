@@ -15,9 +15,9 @@
           <label for="email">E-Mail oder Benutzername</label>
           <input
             id="email"
-            type="email"
-            v-model="email"
-            placeholder="example@.com"
+            type="text"
+            v-model="emailUsername"
+            placeholder="E-Mail oder Benutzername"
             required
           />
         </div>
@@ -29,7 +29,7 @@
             id="password"
             type="password"
             v-model="password"
-            placeholder="example@.com"
+            placeholder="Password"
             required
           />
         </div>
@@ -38,6 +38,7 @@
         <button type="submit" class="login-button">
           Login
         </button>
+        <div class="error-text" v-if="errorText">{{ errorText }}</div>
       </form>
 
       <!-- Text unten -->
@@ -55,13 +56,15 @@ import { useRouter } from "vue-router";
 import { login } from "@/api/routes/users";
 
 const router = useRouter()
-const email = ref("");
+const emailUsername = ref("");
 const password = ref("");
+const errorText = ref("")
 
 const handleLogin = async () => {
-  const response = await login(email.value, password.value)
+  const response = await login(emailUsername.value, password.value)
 
   if (response.success) router.push("/")
+  else errorText.value = response.message
 };
 </script>
 
@@ -159,5 +162,11 @@ const handleLogin = async () => {
 
 .register-text a:hover {
   text-decoration: underline;
+}
+
+.error-text {
+  color: red;
+  width: 100%;
+  text-align: center;
 }
 </style>

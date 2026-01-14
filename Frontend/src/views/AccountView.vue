@@ -1,10 +1,11 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { logout, editUserdata } from '@/api/routes/users'
 
-
+const router = useRouter()
 const username = ref("Pascal123")
 const email = ref("pascal_buehler@sluz.ch")
-const password = ref("Pascal123")
 
 
 const organisations = ref([
@@ -13,15 +14,13 @@ const organisations = ref([
   { id: 3, name: "Organisation 3" },
 ])
 
-const selected = ref(JSON.parse(localStorage.getItem('currentOrgId')).name)
+const selected = ref(JSON.parse(localStorage.getItem('currentOrgId'))?.name || "--- Select an organization ---")
 const isOpen = ref(false)
 
 function saveChanges() {
   console.log("Saved values:")
   console.log("Username:", username.value)
   console.log("Email:", email.value)
-  console.log("Password:", password.value)
-  localStorage.setItem('currentOrgId', JSON.stringify(org))
 }
 
 function toggleDropdown() {
@@ -31,9 +30,13 @@ function toggleDropdown() {
 function selectOption(org) {
   selected.value = org.name
   isOpen.value = false
-  console.log("Selected:", org)
 
   localStorage.setItem('currentOrgId', JSON.stringify(org))
+}
+
+async function handleLogout() {
+  const response = await logout()
+  if (response.success) router.push("/login")
 }
 </script>
 
@@ -76,6 +79,7 @@ function selectOption(org) {
         />
         </div>
       <button class="button" @click="saveChanges">Änderungen speichern</button>
+      <button class="button logout-button" @click="handleLogout">Logout</button>
     </div>
   </div>
 </template>
@@ -136,5 +140,25 @@ function selectOption(org) {
 }
 
 
-.button { margin-top: 20px; color: white; background-color: var(--background); border: none; border-radius: 12px; padding: 8px 16px; cursor: pointer; height: 40px; transition: all 0.3s ease; } .button:hover { filter: brightness(0.9); }
+.button { 
+  margin-top: 20px; 
+  color: white; 
+  background-color: var(--background); 
+  border: none; 
+  border-radius: 12px; 
+  padding: 8px 16px; 
+  cursor: pointer; 
+  height: 40px; 
+  transition: all 0.3s ease; 
+}
+
+.button:hover { 
+  filter: brightness(0.9); 
+}
+
+.logout-button {
+  background-color: transparent;
+  border: 2px solid var(--background);
+  color: var(--background);
+}
 </style>

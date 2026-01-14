@@ -50,6 +50,7 @@
         <button type="submit" class="register-button">
           Register
         </button>
+        <div class="error-text" v-if="errorText">{{ errorText }}</div>
       </form>
 
       <!-- Text unten -->
@@ -71,15 +72,17 @@ const username = ref("");
 const email = ref("");
 const password = ref("");
 const router = useRouter();
+const errorText = ref("")
 
 const handleRegister = async () => {
   const response = await register(username.value, email.value, password.value)
 
   if (response.success) router.push("/login")
+  else errorText.value = response.message
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 
 /* Icon oben */
 .icon-wrapper {
@@ -179,5 +182,11 @@ const handleRegister = async () => {
         text-decoration: underline;
         }
     }
+}
+
+.error-text {
+  color: red;
+  width: 100%;
+  text-align: center;
 }
 </style>

@@ -17,6 +17,7 @@ import NewOrganisationView from '@/views/new_org/NewOrganisationView.vue'
 import JoinOrganisationView from '@/views/new_org/JoinOrganisationView.vue'
 import GroupSettingsView from '@/views/GroupSettingsView.vue'
 import ManageOrganisationView from '@/views/new_org/ManageOrganisationView.vue'
+import { checkLogin } from '@/api/routes/users'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -48,4 +49,28 @@ const router = createRouter({
     },
   ],
 })
+
+router.beforeEach(async (to, from, next) => {
+  const routeNames = [
+    "home",
+    "account",
+    "new-group",
+    "neu_rollen",
+    "group-view",
+    "direct-message",
+    "all-groups",
+    "new-org",
+    "join-org",
+    "group-settings",
+    "manage-org"
+  ]
+
+  if (routeNames.includes(to.name)) {
+    const response = await checkLogin()
+    if (!response.loggedIn) router.push("/login")
+  }
+
+  next()
+})
+
 export default router
