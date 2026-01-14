@@ -39,7 +39,7 @@ onMounted(async () => {
       v-for="group in groups"
       v-if="groups.length !== 0 && !groupsLoading && orgAvailable"
       :key="group.groupId"
-      @click="router.push('/group-view')"
+      @click="router.push(`/group-view/${group.groupId}`)"
     >
       <h2>{{ group.name }}</h2>
     </div>

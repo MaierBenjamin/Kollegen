@@ -1,11 +1,14 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { createGroup } from "@/api/routes/groups";
+import { selectedOrganization } from "@/api/routes/organizations";
+import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
-
 const channels = ref<string[]>([]);
 const newChannel = ref<string>("");
+const groupName = ref("");
+let selectedOrganizationId = 0
 
 function addChannel() {
   const name = newChannel.value.trim();
@@ -19,6 +22,21 @@ function addChannel() {
 function removeChannel(index: number) {
   channels.value.splice(index, 1);
 }
+
+async function handleCreateGroup() {
+  console.log(selectedOrganizationId)
+  console.log(groupName.value)
+  const response = await createGroup(selectedOrganizationId, groupName.value)
+  if (response.success) router.push("/")
+}
+
+onMounted(async () => {
+  const response = await selectedOrganization()
+
+  if (response.success) {
+    selectedOrganizationId = response.selectedOrganization
+  }
+})
 </script>
 
 <template>
@@ -40,10 +58,10 @@ function removeChannel(index: number) {
 
       <div class="form-group">
         <label>Gruppenname</label>
-        <input class="text-input" placeholder="Name der Gruppe" />
+        <input class="text-input" v-model="groupName" placeholder="Name der Gruppe" />
       </div>
 
-      <div class="form-group">
+      <!-- <div class="form-group">
         <label>Kanäle</label>
 
         <div class="channels-inline">
@@ -74,9 +92,9 @@ function removeChannel(index: number) {
             @click="addChannel"
           />
         </div>
-      </div>
+      </div> -->
 
-      <button>Speichern</button>
+      <button @click="handleCreateGroup">Speichern</button>
     </main>
   </div>
 </template>
