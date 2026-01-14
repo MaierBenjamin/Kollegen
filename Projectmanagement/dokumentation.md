@@ -106,9 +106,5 @@ UserStories wurden erstellt und zugewiesen und zugeteilt.
 | **US02** | **Org-Erstellung** | Als Nutzer möchte ich neue Organisationen erstellen oder bestehenden beitreten können, um einen zentralen Arbeitsraum für meine Teams zu definieren. | **Pascal**, **Julian** |
 | **US03** | **Org-Switching** | Als Nutzer möchte ich nahtlos zwischen meinen Organisationen wechseln können, damit mir die jeweils relevanten Gruppen und Kontakte angezeigt werden. | **Pascal**, **Julian**  |
 | **US04** | **Gruppenverwaltung** | Als Nutzer möchte ich innerhalb einer Organisation Gruppen anlegen und verwalten können, um die Zusammenarbeit thematisch zu strukturieren. | **Janik**, **Julian**  |
-| **US05** | **Kanal-Kommunikation**| Als Mitglied einer Gruppe möchte ich in Kanälen chatten und Dateien (Bilder/Dokumente) hochladen können, um mich effizient mit dem Team auszutauschen. | **Janik**, **Julian** |
-| **US06** | **Direktnachrichten** | Als Nutzer möchte ich private Nachrichten an einzelne Mitglieder meiner Organisation senden können, um diskrete Kommunikation zu ermöglichen. | **Pascal**, **Julian**  |
-| **US07** | **Globale Suche** | Als Nutzer möchte ich über ein zentrales Suchfeld nach Personen in meiner Organisation suchen können, um schnell einen Chat-Kontakt herzustellen. | **Pascal**, **Julian**  |
-| **US08** | **Profil-Management** | Als Nutzer möchte ich mein Profilbild und meinen Benutzernamen anpassen können, um meine Identität auf der Plattform zu pflegen. | **Janik**, **Julian**  |
-| **US09** | **App-Navigation** | Als Nutzer möchte ich über eine statische Navbar jederzeit zwischen Gruppen, Chats und Einstellungen wechseln können. | **Pascal**, **Julian**  |
-| **US10** | **Chat-Historie** | Als Nutzer möchte ich alle Nachrichten in chronologischer Reihenfolge sehen, um den Überblick über vergangene Gespräche zu behalten. | **Janik*, **Julian** |
+| **US05** | **Profil-Management** | Als Nutzer möchte ich mein Profilbild und meinen Benutzernamen anpassen können, um meine Identität auf der Plattform zu pflegen. | **Janik**, **Julian**  |
+| **US06** | **App-Navigation** | Als Nutzer möchte ich über eine statische Navbar jederzeit zwischen Gruppen, Chats und Einstellungen wechseln können. | **Pascal**, **Julian**  |
