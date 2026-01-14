@@ -1,24 +1,17 @@
-<script setup lang="ts">
+<script setup>
+import { joinOrganization } from "@/api/routes/organizations";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
+const joinId = ref("")
 
-const roles = ref<string[]>(["@member"]);
-const newRole = ref<string>("");
+async function handleJoinOrganization() {
+  if (!joinId.value) return
 
-function addRole() {
-  const name = newRole.value.trim();
-  if (!name) return;
-  if (roles.value.includes(name)) return;
+  const response = await joinOrganization(joinId.value)
 
-  roles.value.push(name);
-  newRole.value = "";
-}
-
-function removeRole(index: number) {
-  if (roles.value[index] === "@member") return;
-  roles.value.splice(index, 1);
+  if (response.success) router.push("/account")
 }
 </script>
 
@@ -46,7 +39,7 @@ function removeRole(index: number) {
 
       <div class="form-group">
         <label>Organisationsbeitrittscode</label>
-        <input class="text-input" placeholder="Beitrittscode der Organisation" />
+        <input class="text-input" v-model="joinId" placeholder="Beitrittscode der Organisation" />
       </div>
 
 
@@ -55,7 +48,7 @@ function removeRole(index: number) {
 </div>
 
           
-      <button>Beitreten</button>
+      <button @click="handleJoinOrganization">Beitreten</button>
     </main>
   </div>
 </template>

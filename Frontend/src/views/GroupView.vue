@@ -1,53 +1,28 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { getGroup } from '@/api/routes/groups'
+import { ref, computed, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 
 const activeTab = ref('chat')
+const route = useRoute()
+const group = ref({})
 
-const group3 = ref({
-  id: 3,
-  name: "Gruppe 3",
-  channels: [
-    { channelId: 1, channelName: "Allgemein" },
-    { channelId: 2, channelName: "Kanal 2" },
-    { channelId: 3, channelName: "Kanal 3" },
-    { channelId: 4, channelName: "Allgemein 3" },
-  ]
-})
-
-const activeChannel = ref(group3.value.channels[0])
+const activeChannel = ref()
 function selectChannel(channel) {
   activeChannel.value = channel
 }
 
-const allMessages = {
-  1: [{ id: 1, userId: 1, userName: "Benjamin", content: "Hallo im Channel 1", timestamp: "10:15" }],
-  2: [{ id: 2, userId: 3, userName: "Janik", content: "Channel 2 Nachricht", timestamp: "10:20" }],
-  3: [{ id: 3, userId: 2, userName: "Benjamin", content: "Channel 3 hier!", timestamp: "10:25" }],
-  4: [{ id: 4, userId: 3, userName: "Janik", content: "Allgemein 3 Nachrichten", timestamp: "10:30" }]
-}
-
-const allFiles = {
-  1: [{ id: 1, name: "report.pdf", path: "/groups/channel1/files/report.pdf" }],
-  2: [{ id: 2, name: "presentation.pptx", path: "/groups/channel2/files/presentation.pptx" }],
-  3: [{ id: 3, name: "diagram.png", path: "/groups/channel3/files/diagram.png" }],
-  4: []
-}
-
-const messages = computed(() => allMessages[activeChannel.value.channelId] || [])
-const files = computed(() => allFiles[activeChannel.value.channelId] || [])
+// const messages = computed(() => allMessages[activeChannel.value.channelId] || [])
 
 const user = { id: 1, username: "User" }
 
 const newMessage = ref("")
 function sendMessage() {
   if (!newMessage.value.trim()) return
-  const newId = (messages.value[messages.value.length - 1]?.id || 0) + 1
   messages.value.push({
-    id: newId,
     userId: user.id,
     userName: user.username,
     content: newMessage.value,
-    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   })
   newMessage.value = ""
 }
@@ -59,23 +34,20 @@ function download(file) {
   link.click()
 }
 
-function uploadFile(event) {
-  const file = event.target.files[0]
-  if (!file) return
-  allFiles[activeChannel.value.channelId].push({
-    id: allFiles[activeChannel.value.channelId].length + 1,
-    name: file.name,
-    path: URL.createObjectURL(file)
-  })
-}
+onMounted(async () => {
+  const groupResponse = await getGroup(route.params.id) 
+
+  if (groupResponse.success) {
+    group.value = groupResponse.group
+  }
+})
 </script>
 
 <template>
   <div class="top">
-    <h1>{{ group3.name }}</h1>
+    <h1>{{ group.name }}</h1>
     <div class="tabs">
       <h2 :class="{ active: activeTab === 'chat' }" @click="activeTab = 'chat'">Chat</h2>
-      <h2 :class="{ active: activeTab === 'files' }" @click="activeTab = 'files'">Dateien</h2>
       <img
         class="plus-icon"
         src="@/assets/settings.svg"
@@ -88,9 +60,8 @@ function uploadFile(event) {
   <div class="main-wrapper">
     <div class="side">
       <div
-        v-for="channel in group3.channels"
+        v-for="channel in group.channels"
         :key="channel.channelId"
-        :class="{ active: activeChannel.channelId === channel.channelId }"
         class="channel-item"
         @click="selectChannel(channel)"
       >

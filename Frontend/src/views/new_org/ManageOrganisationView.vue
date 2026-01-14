@@ -1,40 +1,31 @@
-<script setup lang="ts">
-import { ref } from 'vue'
+<script setup>
+import { getOrganization, getOrganizations } from '@/api/routes/organizations'
+import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
-const groups = ref([
-  { id: 1, name: 'Org 1' },
-  { id: 2, name: 'Org 2' },
-  { id: 3, name: 'Org 3' },
-])
-
-
-const members = ref([
-  { id: 1, name: 'Janik', role: "owner" },
-  { id: 2, name: 'Pascal', role: "member"},
-  { id: 3, name: 'Benjamin', role: "member"},
-])
-
+const organizations = ref([])
+const info = ref({})
 const router = useRouter()
 
-const roles = ref<string[]>(['@member'])
-const newRole = ref<string>('')
-
-function addRole() {
-  const name = newRole.value.trim()
-  if (!name) return
-  if (roles.value.includes(name)) return
-
-  roles.value.push(name)
-  newRole.value = ''
-}
-
-function removeRole(index: number) {
-  if (roles.value[index] === '@member') return
-  roles.value.splice(index, 1)
-}
 
 const activeTab = ref('chooseOrg')
+
+async function switchToInfo(orgId) {
+  const response = await getOrganization(orgId)
+
+  if (response.success) {
+    info.value = response.organization
+    activeTab.value = "info"
+  }
+}
+
+onMounted(async () => {
+  const orgsResponse = await getOrganizations()
+
+  if (orgsResponse.success) {
+    organizations.value = orgsResponse.organizations
+  }
+})
 </script>
 
 <template>
@@ -62,24 +53,17 @@ const activeTab = ref('chooseOrg')
       <div v-if="activeTab === 'chooseOrg'">
         <div
           class="gruppen-card"
-          v-for="group in groups"
-          :key="group.id"
-          @click="activeTab = 'manageMembers'"
+          v-for="org in organizations"
+          :key="org.organizationId"
+          @click="switchToInfo(org.organizationId)"
         >
-          <h2>{{ group.name }}</h2>
+          <h2>{{ org.name }}</h2>
         </div>
       </div>
 
-      <div v-if="activeTab === 'manageMembers'">
-        <div
-          class="gruppen-card"
-          v-for="member in members"
-          :key="member.id"
-        >
-          <h2>{{ member.name }}</h2>
-
-          
-        </div>
+      <div v-if="activeTab === 'info'">
+        <div>{{ `Description: ${info.description}` }}</div>
+        <div>{{ `Join ID: ${info.joinUUID}` }}</div>
       </div>
 
       <div class="form-group"></div>
