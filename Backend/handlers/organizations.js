@@ -37,7 +37,43 @@ export async function getOrganization(req, res) {
   if (!organizationUser) return res.status(404).json({success: false, message: "User not in organization"})
   
   res.status(200).json({success: true, message: "Successfully retrieved organization from database", organization})
-} 
+}
+
+export async function selectedOrganization(req, res) {
+  const [[user]] = await safeOperation(
+    () => db.query("select selectedOrganization from users where userId = ?", [req.session.user.id]),
+    "Error while retrieving selected organization from database"
+  )
+
+  const selectedOrganization = user.selectedOrganization ? user.selectedOrganization : 0
+  
+  res.status(200).json({success: true, message: "Successfully retrieved selected organization from database", selectedOrganization})
+}
+
+export async function setSelectedOrganization(req, res) {
+  const {organizationId} = req.body
+
+  const [[organization]] = await safeOperation(
+    () => db.query("select organizationId from organizations where organizationId = ?", [organizationId]),
+    "Error while retrieving organization from database"
+  )
+  
+  if (!organization) return res.status(404).json({success: false, message: "Organization not found"})
+
+  const [[organizationUser]] = await safeOperation(
+    () => db.query("select userRole from organization_users where fk_UserId = ? and fk_OrganizationId = ?", [req.session.user.id, organizationId]),
+    "Error while retrieving organization user from database"
+  )
+
+  if (!organizationUser) return res.status(404).json({success: false, message: "User not in organization"})
+
+  await safeOperation(
+    () => db.query("update users set selectedOrganization = ? where userId = ?", [organizationId, req.session.user.id]),
+    "Error while retrieving selected organization from database"
+  )
+  
+  res.status(200).json({success: true, message: "Successfully set selected organization"})
+}
 
 export async function getUsers(req, res) {
   const {organizationId} = req.query

@@ -2,18 +2,15 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { logout, editUserdata, getUserdata } from '@/api/routes/users'
+import { getOrganizations, selectedOrganization, setSelectedOrganization } from '@/api/routes/organizations'
 
 const router = useRouter()
 const username = ref("")
 const email = ref("")
 
-const organisations = ref([
-  { id: 1, name: "Organisation 1" },
-  { id: 2, name: "Organisation 2" },
-  { id: 3, name: "Organisation 3" },
-])
+const organizations = ref([])
 
-const selected = ref(JSON.parse(localStorage.getItem('currentOrgId'))?.name || "--- Select an organization ---")
+const selected = ref("")
 const isOpen = ref(false)
 
 async function saveChanges() {
@@ -26,11 +23,11 @@ function toggleDropdown() {
   isOpen.value = !isOpen.value
 }
 
-function selectOption(org) {
+async function selectOption(org) {
   selected.value = org.name
   isOpen.value = false
 
-  localStorage.setItem('currentOrgId', JSON.stringify(org))
+  await setSelectedOrganization(org.organizationId)
 }
 
 async function handleLogout() {
@@ -39,11 +36,25 @@ async function handleLogout() {
 }
 
 onMounted(async () => {
-  const response = await getUserdata()
+  const userResponse = await getUserdata()
 
-  if (response.success) {
-    username.value = response.user.username
-    email.value = response.user.email
+  if (userResponse.success) {
+    username.value = userResponse.user.username
+    email.value = userResponse.user.email
+  }
+
+  const organizationsResponse = await getOrganizations()
+
+  if (organizationsResponse.success) {
+    organizations.value = organizationsResponse.organizations
+  }
+
+  const selectedOrganizationResponse = await selectedOrganization() 
+
+  if (selectedOrganizationResponse.success && selectedOrganizationResponse.selectedOrganization) {
+    selected.value = organizations.value.find(org => org.organizationId === selectedOrganizationResponse.selectedOrganization).name
+  } else {
+    selected.value = "--- Select an organization ---"
   }
 })
 </script>
@@ -71,7 +82,7 @@ onMounted(async () => {
           </button>
           <ul v-show="isOpen" class="dropdown-list">
             <div 
-              v-for="org in organisations" 
+              v-for="org in organizations" 
               :key="index" 
               @click="selectOption(org)"
             >

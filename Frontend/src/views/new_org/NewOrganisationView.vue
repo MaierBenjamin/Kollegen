@@ -3,17 +3,18 @@ import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 
 import JoinOrganisationView from "./JoinOrganisationView.vue";
+import { createOrganization } from "@/api/routes/organizations";
 
 const router = useRouter();
+const organizationName = ref("")
 
-const users = ref([
-  { id: 1, username: "Janik" },
-  { id: 2, username: "Pascal" },
-  { id: 3, username: "Benjamin" },
-  { id: 4, username: "Julian" },
-])
+async function handleCreateOrganization() {
+  if (!organizationName.value) return
 
+  const response = await createOrganization(organizationName.value)
 
+  if (response.success) router.push("/account")
+}
 </script>
 
 <template>
@@ -40,7 +41,7 @@ const users = ref([
 
       <div class="form-group">
         <label>Organisationsname</label>
-        <input class="text-input" placeholder="Name der Organisation" />
+        <input class="text-input" placeholder="Name der Organisation" v-model="organizationName" @keydown.enter="handleCreateOrganization"/>
       </div>
 
 
@@ -49,7 +50,7 @@ const users = ref([
 </div>
 
           
-      <button>Speichern</button>
+      <button @click="handleCreateOrganization">Speichern</button>
     </main>
   </div>
 </template>

@@ -1,11 +1,23 @@
 import request from "../request";
 
+export async function getOrganizations() {
+  return request("get", "/organizations")
+}
+
 export async function getUsers(organizationId) {
   return request("get", "/organizations/users", { params: { organizationId }})
 }
 
 export async function getOrganization(organizationId) {
   return request("get", "/organizations/single", { params: { organizationId }})
+}
+
+export async function selectedOrganization() {
+  return request("get", "/organizations/selected")
+}
+
+export async function setSelectedOrganization(organizationId) {
+  return request("post", "/organizations/set-selected", { data: { organizationId }})
 }
 
 export async function createOrganization(name, description) {

@@ -7,6 +7,8 @@ const organizationRouter = express.Router()
 
 organizationRouter.get("/", checkAuth, routeWrapper(organizationHandler.getOrganizations))
 organizationRouter.get("/single", checkAuth, routeWrapper(organizationHandler.getOrganization))
+organizationRouter.post("/set-selected", checkAuth, routeWrapper(organizationHandler.setSelectedOrganization))
+organizationRouter.get("/selected", checkAuth, routeWrapper(organizationHandler.selectedOrganization))
 organizationRouter.get("/users", checkAuth, routeWrapper(organizationHandler.getUsers))
 organizationRouter.post("/create", checkAuth, routeWrapper(organizationHandler.createOrganization))
 organizationRouter.delete("/delete", checkAuth, routeWrapper(organizationHandler.deleteOrganization))

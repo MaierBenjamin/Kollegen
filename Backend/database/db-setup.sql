@@ -2,7 +2,8 @@ CREATE TABLE users(
   userId INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(50) UNIQUE,
   email VARCHAR(254) UNIQUE,
-  `password` VARCHAR(256)
+  `password` VARCHAR(256),
+  selectedOrganization INT UNSIGNED
 );
 
 CREATE TABLE organizations(

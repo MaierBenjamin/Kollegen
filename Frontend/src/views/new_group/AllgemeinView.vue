@@ -39,8 +39,8 @@ function removeChannel(index: number) {
       <h2>Allgemein</h2>
 
       <div class="form-group">
-        <label>Mannschaftsname</label>
-        <input class="text-input" placeholder="Name der Mannschaft" />
+        <label>Gruppenname</label>
+        <input class="text-input" placeholder="Name der Gruppe" />
       </div>
 
       <div class="form-group">

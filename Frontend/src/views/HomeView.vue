@@ -1,5 +1,28 @@
 <script setup>
-const groups = ["Gruppe 1", "Gruppe 2", "Gruppe 3", "Gruppe 4", "Gruppe 5", "Gruppe 6", "Gruppe 7", "Gruppe 8", "Gruppe 9", "Gruppe 10"];
+import { getGroups } from '@/api/routes/groups';
+import { onMounted, ref } from 'vue';
+import { useRouter, RouterLink } from 'vue-router';
+import { selectedOrganization } from '@/api/routes/organizations';
+
+const groups = ref([])
+const router = useRouter()
+const groupsLoading = ref(true)
+const orgAvailable = ref(false)
+
+onMounted(async () => {
+  const selectedOrganizationResponse = await selectedOrganization() 
+
+  if (selectedOrganizationResponse.selectedOrganization) {
+    const response = await getGroups(selectedOrganizationResponse.selectedOrganization)
+    
+    if (response.success) {
+      groups.value = response.groups
+      orgAvailable.value = true
+    }
+  }
+
+  groupsLoading.value = false
+})
 </script>
 
 <template>
@@ -8,18 +31,20 @@ const groups = ["Gruppe 1", "Gruppe 2", "Gruppe 3", "Gruppe 4", "Gruppe 5", "Gru
       class="plus-icon"
       src="@/assets/circle-plus.svg"
       alt="Plus"
-      @click="$router.push('/new-group')"
+      @click="router.push('/new-group')"
+      v-if="!groupsLoading && orgAvailable"
     />
-
     <div
       class="gruppen-card"
       v-for="group in groups"
-      :key="group"
-      @click="$router.push('/group-view')"
+      v-if="groups.length !== 0 && !groupsLoading && orgAvailable"
+      :key="group.groupId"
+      @click="router.push('/group-view')"
     >
-      <h2>{{ group }}</h2>
-
+      <h2>{{ group.name }}</h2>
     </div>
+    <div v-else-if="groups.length === 0 && !groupsLoading && orgAvailable">Noch keine Gruppen</div>
+    <div v-else-if="groups.length === 0 && !groupsLoading && !orgAvailable">Keine Organisation verfügbar. <RouterLink to="/new-org">Erstelle eine</RouterLink> oder <RouterLink to="/join-org">tritt einer bei</RouterLink> und dann wähle sie in den <RouterLink to="/account">Accounteinstellungen</RouterLink> aus</div>
   </div>
 </template>
 
